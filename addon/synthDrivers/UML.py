@@ -70,7 +70,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         # end load synth for all languages
         self.cur_synth = None
         self.lock = threading.Lock()
-        self.last_lang = 'en'
+        self.last_lang = ''
         self.lastindex = None
         synthDriverHandler.synthDoneSpeaking.register(self.on_done)
         synthDriverHandler.synthIndexReached.register(self.on_index)
@@ -90,7 +90,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
     def speak(self, seq):
         seq = modseq(seq, 'en')
         print("seq: %s" % seq)
-        synth = self.synthInstanceMap['en']
+        synth = self.synthInstanceMap[self.last_lang]
         textList = []
         lastindex = None
         for i, item in enumerate(seq):
@@ -193,13 +193,13 @@ def stringsplit(s, lang):
             continue  # spaces don't change anything
         kind = str2kind(s, pos)
         if kind != lastkind:  # switched languages
-            lst.extend([LangChangeCommand(_umlLanguages.langCodeMap[lastkind]), str(lastkind) + ": " + s[start:pos]])
+            lst.extend([LangChangeCommand(_umlLanguages.langCodeMap[lastkind]), s[start:pos]])
             lastkind = kind
             start = pos
         # end kind is changed?
     # end enumerate
     # The final piece of text that wasn't inserted yet
-    lst.extend([LangChangeCommand(_umlLanguages.langCodeMap[kind]), str(kind) + ": " + s[start:pos+1]])
+    lst.extend([LangChangeCommand(_umlLanguages.langCodeMap[kind]), s[start:pos+1]])
     return lst
 
 
