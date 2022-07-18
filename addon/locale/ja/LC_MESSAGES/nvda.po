@@ -1,0 +1,661 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the HISS package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: HISS 1.00\n"
+"Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
+"POT-Creation-Date: 2022-02-14 18:21+0900\n"
+"PO-Revision-Date: 2022-02-14 18:23+0900\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: addon\synthDrivers\HISS.py:38
+msgid "Rate boos&t"
+msgstr "高速読み上げ(&T)"
+
+#: addon\synthDrivers\HISS.py:41
+msgctxt "synth setting"
+msgid "RateBoost"
+msgstr "高速読み上げ"
+
+#: addon\synthDrivers\HISS.py:46
+msgid "&Inflection"
+msgstr "抑揚(&I)"
+
+#: addon\synthDrivers\HISS.py:52
+msgctxt "synth setting"
+msgid "Inflection"
+msgstr "抑揚"
+
+#: addon\synthDrivers\HISS.py:57
+msgid "&Pause between words"
+msgstr "単語の間で息継ぎをする(&P)"
+
+#: addon\synthDrivers\HISS.py:62
+msgid "Pause &Length"
+msgstr "息継ぎの長さ(&L)"
+
+#: addon\synthDrivers\HISS.py:70
+msgid "&Guess unknown word pronunciations"
+msgstr "不明な単語に推測読みを適用(&G)"
+
+#: addon\synthDrivers\HISS.py:73
+msgctxt "synth setting"
+msgid "Guess unknown word pronunciations"
+msgstr "不明な単語に推測読みを適用"
+
+#: addon\synthDrivers\HISS.py:77
+msgid "&Emphasize high frequencies"
+msgstr "高域を強調(&E)"
+
+#: addon\synthDrivers\HISS.py:187
+msgid "There was an error during the initialization procedure."
+msgstr "初期化処理中に何らかのエラーが発生しました。"
+
+#: addon\synthDrivers\HISS.py:188
+msgid ""
+"HISS is currently locked. Please register the software or enable the trial "
+"mode. See the NVDA menu -> HISS for available options."
+msgstr ""
+"HISSは、現在ロックされています。ソフトウェア登録を行うか、体験版モードを有効"
+"にしてください。利用可能なオプションについては、 NVDAメニュー->HISS をご覧く"
+"ださい。"
+
+#: addon\synthDrivers\HISS.py:189
+msgid "Failed to load heuristical reading engine."
+msgstr "推測読みエンジンの読み込みに失敗しました。"
+
+#: addon\synthDrivers\HISS.py:193
+msgid ""
+"An unknown error has occurred. Please contact ACT Laboratory for further "
+"assistance."
+msgstr ""
+"不明なエラーが発生しました。詳細については、ACT Laboratoryにお問い合わせくだ"
+"さい。"
+
+#: addon\synthDrivers\HISS.py:195
+msgid "Failed to load HISS."
+msgstr "HISSを読み込めませんでした。"
+
+#: addon\synthDrivers\HISS.py:196
+#, python-format
+msgid "Error code: %(code)d"
+msgstr "エラーコード: %(code)d"
+
+#: addon\synthDrivers\HISS.py:199 addon\globalPlugins\HISS\lgc.py:108
+#: addon\globalPlugins\HISS\lgc.py:113 addon\globalPlugins\HISS\lgc.py:123
+#: addon\globalPlugins\HISS\lgc.py:136 addon\globalPlugins\HISS\lgc.py:159
+#: addon\globalPlugins\HISS\lgc.py:163 addon\globalPlugins\HISS\updater.py:75
+#: addon\globalPlugins\HISS\updater.py:80
+#: addon\globalPlugins\HISS\updater.py:91
+msgid "Error"
+msgstr "エラー"
+
+#: addon\globalPlugins\HISS\__init__.py:28
+#: addon\globalPlugins\HISS\__init__.py:107
+msgid "HISS"
+msgstr "HISS"
+
+#: addon\globalPlugins\HISS\__init__.py:54
+msgid "Start &trial"
+msgstr "体験版を開始(&T)"
+
+#: addon\globalPlugins\HISS\__init__.py:55
+msgid "Starts trial version."
+msgstr "体験版を開始します。"
+
+#: addon\globalPlugins\HISS\__init__.py:59
+msgid "O&nline registration"
+msgstr "オンライン登録(&N)"
+
+#: addon\globalPlugins\HISS\__init__.py:60
+msgid "Register the software online and activate the full features."
+msgstr "オンラインでソフトウェア登録を行い、全ての機能を利用可能にします。"
+
+#: addon\globalPlugins\HISS\__init__.py:65
+msgid "&Get information about registration"
+msgstr "登録情報を取得(&G)"
+
+#: addon\globalPlugins\HISS\__init__.py:65
+msgid "Get required information from this computer."
+msgstr "必要な情報をこのコンピューターから取得します。"
+
+#: addon\globalPlugins\HISS\__init__.py:69
+msgid "Register license &file"
+msgstr "ライセンスファイルを登録(&F)"
+
+#: addon\globalPlugins\HISS\__init__.py:70
+msgid ""
+"Register the license given from ACT Laboratory and unlock the full features "
+"of the software."
+msgstr ""
+"ACT Laboratoryから提供されたライセンスファイルを登録して、全ての機能を利用可"
+"能にします。"
+
+#: addon\globalPlugins\HISS\__init__.py:75
+msgid "O&ffline registration"
+msgstr "オフライン登録(&F)"
+
+#: addon\globalPlugins\HISS\__init__.py:77
+msgid "&Show license information"
+msgstr "ライセンス情報を表示(&S)"
+
+#: addon\globalPlugins\HISS\__init__.py:78
+msgid "Display the currently registered license information."
+msgstr "現在登録されているライセンスの情報を表示します。"
+
+#: addon\globalPlugins\HISS\__init__.py:85
+msgid "Toggles update checking on startup."
+msgstr "起動時のアップデートチェックを切り替えます。"
+
+#: addon\globalPlugins\HISS\__init__.py:92
+msgid "Check for updates"
+msgstr "アップデートを確認"
+
+#: addon\globalPlugins\HISS\__init__.py:93
+msgid "Checks for new updates manually."
+msgstr "アップデートを手動でチェックします。"
+
+#: addon\globalPlugins\HISS\__init__.py:100
+msgid "Run SAPI extension"
+msgstr "SAPI拡張機能を実行"
+
+#: addon\globalPlugins\HISS\__init__.py:101
+msgid "Configures the SAPI version of HISS"
+msgstr "HISSのSAPIバージョンを設定します。"
+
+#: addon\globalPlugins\HISS\__init__.py:112
+msgid "Disable checking for updates on startup"
+msgstr "起動時のアップデートチェックを無効化"
+
+#: addon\globalPlugins\HISS\__init__.py:112
+msgid "Enable checking for updates on startup"
+msgstr "起動時のアップデートチェックを有効化"
+
+#: addon\globalPlugins\HISS\__init__.py:131
+msgid "Offline registration information"
+msgstr "オフライン登録情報"
+
+#: addon\globalPlugins\HISS\__init__.py:133
+#, python-format
+msgid ""
+"Your offline registration code is \"%(code)s\" . The code has been copied to "
+"your clipboard.\n"
+"Next steps:\n"
+"Please enter the code exactly to the offline registration form and get your "
+"license file.\n"
+"Once you've obtained your license file, you can register it from the HISS "
+"menu -> Offline registration -> Register license file."
+msgstr ""
+"貴方のオフライン登録コードは \"%(code)s\" です。 コードをクリップボードにコ"
+"ピーしました。\n"
+"次のステップ:\n"
+"オフライン登録専用ページに、このコードを正確に入力して、ライセンスファイルを"
+"取得してください。\n"
+"ライセンスファイルを取得したら、\"NVDAメニュー\"->\"HISS\"->\"ライセンスファ"
+"イルを登録\"を実行して、ライセンスファイルを登録してください。"
+
+#: addon\globalPlugins\HISS\__init__.py:138
+msgid "choose license file"
+msgstr "ライセンスファイルを選択"
+
+#: addon\globalPlugins\HISS\__init__.py:138
+msgid "license file"
+msgstr "ライセンスファイル"
+
+#: addon\globalPlugins\HISS\__init__.py:164
+msgid "Updates will be checked automatically when launching NVDA."
+msgstr "NVDAを起動するときに、自動的にアップデートがチェックされます。"
+
+#: addon\globalPlugins\HISS\__init__.py:164
+msgid "Updates will not be checked when launching NVDA."
+msgstr "NVDAを起動するときに、アップデートはチェックされません。"
+
+#: addon\globalPlugins\HISS\__init__.py:166
+msgid "Settings changed"
+msgstr "設定変更完了"
+
+#: addon\globalPlugins\HISS\lgc.py:36
+msgid ""
+"The serial number you typed has an invalid form. It should be 19 characters "
+"in total, including the hyphens. Please make sure you're inputting it in "
+"Hankaku mode."
+msgstr ""
+"入力したシリアルキーの形式が間違っています。シリアルキーは、ハイフンを含めて"
+"合計19文字です。\n"
+"半角モードで入力していることを確認してください。"
+
+#: addon\globalPlugins\HISS\lgc.py:37
+msgid ""
+"The serial number you typed was not found on the ACT Laboratory server. "
+"Please make sure you're using a valid serial number."
+msgstr ""
+"入力したシリアルキーが、ACT Laboratoryのサーバで見つかりません。正しいシリア"
+"ルキーを使用していることを確認してください。"
+
+#: addon\globalPlugins\HISS\lgc.py:38
+msgid ""
+"The serial number you typed was rejected by the ACT Laboratory server. "
+"Please contact ACT Laboratory for further information."
+msgstr ""
+"入力したシリアルキーは、ACT Laboratoryのサーバに拒否されました。詳細について"
+"は、ACT Laboratoryにご連絡ください。"
+
+#: addon\globalPlugins\HISS\lgc.py:39
+msgid ""
+"The serial number you typed has been used 3 times within the last 365 days. "
+"You cannot use this serial number at the moment."
+msgstr ""
+"入力したシリアルキーは、過去365日以内に3回使用されています。現在このシリアル"
+"キーは使用できません。"
+
+#: addon\globalPlugins\HISS\lgc.py:40
+msgid ""
+"Access to ACT Laboratory server is currently restricted. Please try again "
+"later."
+msgstr ""
+"現在ACT Laboratoryのサーバにアクセスできません。しばらくたってから、再度お試"
+"しください。"
+
+#: addon\globalPlugins\HISS\lgc.py:41
+msgid ""
+"Failed to establish connection to the ACT Laboratory server. Please check if "
+"your internet connection is working correctly and try again."
+msgstr ""
+"ACT Laboratoryのサーバとの接続に失敗しました。インターネットに接続されている"
+"ことを確認し、再度お試しください。"
+
+#: addon\globalPlugins\HISS\lgc.py:42
+msgid ""
+"The ACT Laboratory server has returned an unknown response. Please contact "
+"ACT Laboratory for further information."
+msgstr ""
+"ACT Laboratoryのサーバが不明な応答を返しました。詳細については、ACT "
+"Laboratoryにお問い合わせください。"
+
+#: addon\globalPlugins\HISS\lgc.py:43
+msgid ""
+"Failed to create license file. Please contact ACT Laboratory for further "
+"assistance."
+msgstr ""
+"ライセンスファイルの作成に失敗しました。ACT Laboratoryにお問い合わせくださ"
+"い。"
+
+#: addon\globalPlugins\HISS\lgc.py:44
+msgid ""
+"Failed to generate license information for this computer. Please contact ACT "
+"Laboratory for further assistance."
+msgstr ""
+"このコンピュータ用のライセンス情報の作成に失敗しました。ACT Laboratoryへお問"
+"い合わせください。"
+
+#: addon\globalPlugins\HISS\lgc.py:45
+msgid ""
+"The ACT Laboratory server has detected that you're using an old version of "
+"the add-on. Please update to the latest version and try again."
+msgstr ""
+"旧バージョンのアドオンを使用していることが検出されました。最新版に更新し、再"
+"度お試しください。"
+
+#: addon\globalPlugins\HISS\lgc.py:46
+msgid ""
+"You can only enable the trial mode three times within the last 180 days."
+msgstr "体験版は、180日間に3回のみ実行できます。"
+
+#: addon\globalPlugins\HISS\lgc.py:47
+msgid ""
+"The ACT Laboratory server could not recognize the software identification "
+"information from your request. Please contact ACT Laboratory for further "
+"assistance."
+msgstr ""
+"ACT Laboratoryのサーバが、ソフトウェアの識別情報を認識できませんでした。ACT "
+"Laboratoryまでご連絡ください。"
+
+#: addon\globalPlugins\HISS\lgc.py:48
+msgid "There was an error opening a file."
+msgstr "ファイルの読み込み中にエラーが発生しました。"
+
+#: addon\globalPlugins\HISS\lgc.py:49
+msgid ""
+"Failed to parse license information file. The file may be corrupted. Please "
+"contact ACT Laboratory for further assistance."
+msgstr ""
+"ライセンス情報ファイルの解析に失敗しました。ファイルが破損している可能性があ"
+"ります。詳細については、ACT Laboratoryへお問い合わせください。"
+
+#: addon\globalPlugins\HISS\lgc.py:50
+msgid ""
+"The response from ACT Laboratory server is corrupted. Please contact ACT "
+"Laboratory for further assistance."
+msgstr ""
+"ACT Laboratoryのサーバからの応答が不正です。ACT Laboratoryにお問い合わせくだ"
+"さい。"
+
+#: addon\globalPlugins\HISS\lgc.py:66
+#, python-format
+msgid ""
+"An unknown error %(code)d has occurred. Please contact ACT Laboratory for "
+"further assistance."
+msgstr ""
+"不明なエラー %(code)d が発生しました。ACT Laboratoryまでお問い合わせくださ"
+"い。"
+
+#: addon\globalPlugins\HISS\lgc.py:70
+msgid ""
+"Successfully registered! You can now start using HISS by selecting it from "
+"NVDA speech settings."
+msgstr ""
+"登録に成功しました。NVDAの音声設定でHISSを選択することで、使用を開始できま"
+"す。"
+
+#: addon\globalPlugins\HISS\lgc.py:70 addon\globalPlugins\HISS\lgc.py:126
+msgid "Success"
+msgstr "成功"
+
+#: addon\globalPlugins\HISS\lgc.py:108
+msgid "Please input your serial number."
+msgstr "シリアルキーを入力してください。"
+
+#. end error
+#: addon\globalPlugins\HISS\lgc.py:126
+msgid ""
+"Trial mode has been enabled. You can now select HISS from NVDA settings and "
+"use full features of the addon for thirty minutes."
+msgstr ""
+"体験版の利用を開始しました。NVDAの設定でHISSを選択することで、30分間全ての機"
+"能をご利用いただけます。"
+
+#: addon\globalPlugins\HISS\lgc.py:140
+msgid "Software name: HISS"
+msgstr "ソフト名: HISS"
+
+#: addon\globalPlugins\HISS\lgc.py:142
+msgid "License: Not registered."
+msgstr "ライセンス: 登録されていません。"
+
+#: addon\globalPlugins\HISS\lgc.py:144
+msgid "License: Invalid. Please re-register."
+msgstr "ライセンス: 不正です。再度登録を行ってください。"
+
+#: addon\globalPlugins\HISS\lgc.py:147
+#, python-format
+msgid "Licensed to: %(lt)s(%(email)s)"
+msgstr "購入者: %(lt)s(%(email)s)"
+
+#: addon\globalPlugins\HISS\lgc.py:148
+#, python-format
+msgid "Serial number: HISS-****-****-%(skl)s"
+msgstr "シリアルキー: HISS-****-****-%(skl)s"
+
+#: addon\globalPlugins\HISS\lgc.py:149
+#, python-format
+msgid "Registered at: %(ra)s"
+msgstr "登録日: %(ra)s"
+
+#. end licensed
+#: addon\globalPlugins\HISS\lgc.py:152
+msgid "License information"
+msgstr "ライセンス情報"
+
+#: addon\globalPlugins\HISS\lgc.py:163
+msgid ""
+"The license file is not valid. Please contact ACT Laboratory for further "
+"assistance."
+msgstr ""
+"ライセンスファイルが正しくありません。ACT Laboratoryにお問い合わせください。"
+
+#: addon\globalPlugins\HISS\lgc.py:203
+msgid "Downloading SAPI extension"
+msgstr "SAPI拡張機能をダウンロードしています"
+
+#: addon\globalPlugins\HISS\lgc.py:204 addon\globalPlugins\HISS\updater.py:152
+msgid "Connecting"
+msgstr "接続中"
+
+#: addon\globalPlugins\HISS\lgc.py:216
+msgid "Error downloading SAPI extension."
+msgstr "SAPI拡張機能のダウンロード中にエラーが発生しました。"
+
+#: addon\globalPlugins\HISS\online.py:12
+msgid "Online registration"
+msgstr "オンライン登録"
+
+#: addon\globalPlugins\HISS\online.py:13
+msgid "Enter your serial number suplied by ACT Laboratory"
+msgstr "ACT Laboratoryにより提供されたシリアル番号を入力してください"
+
+#: addon\globalPlugins\HISS\online.py:16
+msgid "OK"
+msgstr "OK"
+
+#: addon\globalPlugins\HISS\online.py:18
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: addon\globalPlugins\HISS\updater.py:74
+msgid ""
+"Unable to connect to update server.\n"
+"Check your internet connection."
+msgstr ""
+"アップデートサーバに接続できません。\n"
+"インターネット接続をご確認ください。"
+
+#: addon\globalPlugins\HISS\updater.py:80
+msgid "Unable to connect to update server."
+msgstr "アップデートサーバに接続できません。"
+
+#: addon\globalPlugins\HISS\updater.py:90
+msgid ""
+"The update information is invalid.\n"
+"Please contact ACT Laboratory for further information."
+msgstr ""
+"アップデート情報が誤っています。\n"
+"ACT Laboratoryにお問い合わせください。"
+
+#: addon\globalPlugins\HISS\updater.py:98
+msgid ""
+"No updates found.\n"
+"You are using the latest version."
+msgstr ""
+"アップデートが見つかりませんでした。\n"
+"最新版を使用中です。"
+
+#: addon\globalPlugins\HISS\updater.py:98
+#: addon\globalPlugins\HISS\updater.py:103
+#: addon\globalPlugins\HISS\updater.py:108
+#: addon\globalPlugins\HISS\updater.py:113
+msgid "Update check"
+msgstr "アップデートの確認"
+
+#: addon\globalPlugins\HISS\updater.py:102
+msgid "The request parameter is invalid. Please contact the developer."
+msgstr "リクエストパラメータが不正です。開発者までご連絡ください。"
+
+#: addon\globalPlugins\HISS\updater.py:107
+msgid "The updater is not registered. Please contact the developer."
+msgstr "アップデータが登録されていません。開発者までご連絡ください。"
+
+#: addon\globalPlugins\HISS\updater.py:112
+msgid ""
+"An update was found, but updating from the current version is not possible. "
+"Please visit the software's website. "
+msgstr ""
+"アップデートが見つかりましたが、現在のバージョンから自動更新することはできま"
+"えｓん。ソフトウェアの詳細ページから、手動で更新を行ってください。"
+
+#. end set hash
+#: addon\globalPlugins\HISS\updater.py:124
+msgid "Update confirmation"
+msgstr "アップデートの確認"
+
+#: addon\globalPlugins\HISS\updater.py:125
+#, python-brace-format
+msgid ""
+"{summary} Ver.{newVersion} is available.\n"
+"Would you like to update?\n"
+"Current version: {currentVersion}\n"
+"New version: {newVersion}"
+msgstr ""
+"{summary} Ver.{newVersion}が利用可能です。\n"
+"アップデートしますか？\n"
+"現在のバージョン: {currentVersion}\n"
+"新しいバージョン: {newVersion}"
+
+#: addon\globalPlugins\HISS\updater.py:151
+msgid "Downloading add-on update"
+msgstr "アップデートをダウンロード中"
+
+#: addon\globalPlugins\HISS\updater.py:164
+msgid "Error downloading add-on update."
+msgstr "アップデートのダウンロード中にエラーが発生しました。"
+
+#: addon\globalPlugins\HISS\updater.py:233
+msgid "Updating add-on"
+msgstr "アドオンをアップデート中"
+
+#: addon\globalPlugins\HISS\updater.py:234
+msgid "Please wait while the add-on is being updated."
+msgstr "アドオンがアップデートされるまでお待ちください。"
+
+#: addon\globalPlugins\HISS\updater.py:243
+#, python-format
+msgid "Failed to update add-on  from %s."
+msgstr "%sからのアップデートに失敗しました。"
+
+#: addon\installTasks.py:19
+msgid ""
+"Thank you for installing HISS. To start using HISS, please start the trial "
+"mode or register the software from the NVDA -> HISS menu."
+msgstr ""
+"HISSをインストールいただき、ありがとうございます。使用を開始するには、NVDA-"
+">HISSメニューから、体験版を開始するか、ソフトウェアを登録してください。"
+
+#: addon\installTasks.py:20
+msgid "HISS installer"
+msgstr "HISS インストーラー"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+#: buildVars.py:23
+msgid "HISS, High-speed synthesizer for NVDA"
+msgstr "HISS, High-speed synthesizer for NVDA"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+#: buildVars.py:26
+msgid ""
+"HISS Japanese synthDriver for NVDA\n"
+"This add-on provides the HISS speech synth driver for NVDA."
+msgstr ""
+"HISS Japanese synthDriver for NVDA\n"
+"このアドオンは、 HISS 日本語音声エンジンを追加します。"
+
+#~ msgid "Apply confirmation"
+#~ msgstr "適用の確認"
+
+#, python-brace-format
+#~ msgid ""
+#~ "Apply the {summary} Ver.{newVersion}.\n"
+#~ "Is it OK?"
+#~ msgstr ""
+#~ "{summary} Ver.{newVersion}を適用します。適応\n"
+#~ "よろしいですか？"
+
+#~ msgid ""
+#~ "One of the required dictionary files could not be loaded. To solve the "
+#~ "issue, please re-install HISS."
+#~ msgstr ""
+#~ "必要な辞書ファイルの一つを読み込めませんでした。この問題を解決するには、"
+#~ "HISSを再インストールしてください。"
+
+#~ msgid "&Install"
+#~ msgstr "インストール(&I)"
+
+#~ msgid "Run this menu after installing the add-on."
+#~ msgstr "アドオンをインストール後、最初に実行してください。"
+
+#~ msgid "&Uninstall"
+#~ msgstr "アンインストール(&U)"
+
+#~ msgid "Run this menu before uninstalling the add-on."
+#~ msgstr "アドオンを削除する前に実行してください。"
+
+#~ msgid ""
+#~ "HISS needs to copy required files to your computer's system directory. "
+#~ "When prompted, please allow UAC for system directory access."
+#~ msgstr ""
+#~ "HISS を利用する前に、関連ファイルをシステムディレクトリにコピーする必要が"
+#~ "あります。システムディレクトリへのアクセスを行いますので、 UAC による権限"
+#~ "昇格を許可してください。"
+
+#~ msgid ""
+#~ "Install succeeded. If you haven't purchased the add-on, you can start "
+#~ "evaluating it by running \"Enable trial\" from the NVDA menu -> HISS "
+#~ "submenu."
+#~ msgstr ""
+#~ "インストールが完了しました。まだアドンを購入していない場合は、\"NVDAメ"
+#~ "ニュー\"->\"HISS\"->\"体験版を開始\"を実行することで、動作のお試しができま"
+#~ "す。"
+
+#~ msgid ""
+#~ "Install failed. Please try again or contact ACT Laboratory for further "
+#~ "assistance."
+#~ msgstr ""
+#~ "インストールに失敗しました。もう一度お試しください。サポートが必要な場合に"
+#~ "は、ACT Laboratoryまでお問い合わせください。"
+
+#~ msgid "Failure"
+#~ msgstr "失敗"
+
+#~ msgid ""
+#~ "HISS needs to remove files no longer necessary from your computer's "
+#~ "system directory. When prompted, please allow UAC for system directory "
+#~ "access."
+#~ msgstr ""
+#~ "HISS の利用を終了する前に、関連ファイルをシステムディレクトリから取り除く"
+#~ "必要があります。システムディレクトリへのアクセスを行いますので、 UAC 権限"
+#~ "昇格を許可してください。"
+
+#~ msgid "Uninstallation"
+#~ msgstr "アンインストール"
+
+#~ msgid ""
+#~ "Uninstall succeeded. You can now safely delete this add-on from the add-"
+#~ "on manager."
+#~ msgstr ""
+#~ "アンインストールに成功しました。NVDAのアドオンマネージャから、このアドオン"
+#~ "を安全に削除できます。"
+
+#~ msgid ""
+#~ "Uninstall failed. If you don't care about some files left, you can delete "
+#~ "this add-on from the add-on manager. For further assistance, please "
+#~ "contact ACT Laboratory."
+#~ msgstr ""
+#~ "アンインストールに失敗しました。いくつかのファイルが残っても気にならない場"
+#~ "合は、NVDAのアドオンマネージャからこのアドオンを削除しても問題ありません。"
+#~ "サポートが必要な場合は、ACT Laboratoryまでご連絡ください。"
+
+#, python-format
+#~ msgid "Failed to copy the license file. Reason: %(reason)s"
+#~ msgstr "ライセンスファイルのコピーに失敗しました。原因:%(reason)s"
+
+#~ msgid ""
+#~ "HISS needs to register required files to your computer's system "
+#~ "directory. Please run \"Install\" from the NVDA menu -> HISS submenu."
+#~ msgstr ""
+#~ "HISS を利用する前に、関連ファイルをシステムディレクトリにコピーする必要が"
+#~ "あります。NVDAメニュー→「HISS」サブメニューから、「インストール」を実行し"
+#~ "てください。"
+
+#~ msgid "Initial setup"
+#~ msgstr "インストール"
