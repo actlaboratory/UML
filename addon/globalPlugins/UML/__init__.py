@@ -19,6 +19,8 @@ except BaseException:
 
 
 confspec = {
+    "primaryLanguage": "string(default=ja)",
+    "strategy": "string(default=word)",
     "checkForUpdatesOnStartup": "boolean(default=True)",
 }
 config.conf.spec["UML_global"] = confspec
@@ -73,8 +75,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             2, wx.ID_ANY, _("Universal Multilingual"), self.rootMenu)
 
     def settings(self, evt):
-        dlg = SettingsDialog()
-        dlg.ShowModal()
+        opts = {
+            "primary_language": config.conf["UML_global"]["primaryLanguage"],
+            "strategy": config.conf["UML_global"]["strategy"],
+        }
+        dlg = SettingsDialog(opts)
+        ret = dlg.ShowModal()
+        if ret == wx.ID_OK:
+            data = dlg.GetData()
+            config.conf["UML_global"]["primaryLanguage"] = data["primary_language"]
+            config.conf["UML_global"]["strategy"] = data["strategy"]
         dlg.Destroy()
 
     def updateCheckToggleString(self):

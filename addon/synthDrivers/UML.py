@@ -6,7 +6,7 @@ import synthDriverHandler
 from speech.commands import IndexCommand, LangChangeCommand
 import queue
 import threading
-from . import _umlLanguages
+from . import _umlCodes
 
 SYNTH1 = 'espeak'
 SYNTH2 = 'HISS'
@@ -56,6 +56,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
     supportedNotifications = {
         synthDriverHandler.synthIndexReached, synthDriverHandler.synthDoneSpeaking
     }
+    default_lang = _umlCodes.JAPANESE
 
     @classmethod
     def check(cls):
@@ -88,36 +89,27 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread.join()
 
     def speak(self, seq):
-        seq = modseq(seq, 'en')
-        print("seq: %s" % seq)
+        seq = modseq(seq, self.last_lang)
         synth = self.synthInstanceMap[self.last_lang]
         textList = []
         lastindex = None
         for i, item in enumerate(seq):
-            print("item: %s" % item)
             if isinstance(item, LangChangeCommand):
                 if item.lang == self.last_lang:
-                    print("same synth, skipping")
                     continue
                 if textList:
-                    print("textlist exists")
                     if lastindex:
-                        print("lastIndex exists")
                         textList.append(IndexCommand(lastindex))
                         lastindex = None
                     # end lastIndex exists
-                    print("speakWait")
                     _execWhenDone(self.wait_speak, synth, textList[:])
                     textList = []
                 # end textList exists
                 self.last_lang = item.lang
-                print("switching language")
                 if item.lang == 'en':
                     synth = self.synthInstanceMap['en']
-                    print("english selected")
                 else:
                     synth = self.synthInstanceMap['ja']
-                    print("japanese selected")
             # end LangChangeCommand
             elif isinstance(item, IndexCommand):
                 lastindex = item.index
@@ -139,7 +131,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.done.wait()
 
     def cancel(self):
-        print("cancel")
         try:
             while True:
                 item = bgQueue .get_nowait()
@@ -168,7 +159,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
     def on_index(self, synth=None, index=None):
         if synth == self:
             return
-        print(f"on_index: {index} {synth}")
         # We dont' care which synth this came from, pass it on
         synthDriverHandler.synthIndexReached.notify(synth=self, index=index)
 
@@ -177,7 +167,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         return self.last_lang
 
 
-def stringsplit(s, lang):
+def stringsplit(s, last_lang):
     """Processes speaking text. Returns a newly generated part of SpeechSequence."""
     if s.strip() == '':
         return []
@@ -185,25 +175,25 @@ def stringsplit(s, lang):
     lst = []
     start = 0
     # set kind using the first char
-    lastkind = str2kind(s, 0)
+    lastkind = str2kind(s, 0, last_lang)
 
     for pos, c in enumerate(s):
         u = ord(c)
         if u == 32:
             continue  # spaces don't change anything
-        kind = str2kind(s, pos)
+        kind = str2kind(s, pos, lastkind)
         if kind != lastkind:  # switched languages
-            lst.extend([LangChangeCommand(_umlLanguages.langCodeMap[lastkind]), s[start:pos]])
+            lst.extend([LangChangeCommand(lastkind), s[start:pos]])
             lastkind = kind
             start = pos
         # end kind is changed?
     # end enumerate
     # The final piece of text that wasn't inserted yet
-    lst.extend([LangChangeCommand(_umlLanguages.langCodeMap[kind]), s[start:pos+1]])
+    lst.extend([LangChangeCommand(kind), s[start:pos+1]])
     return lst
 
 
-def modseq(seq, lang):
+def modseq(seq, last_lang):
     """NVDA's LangChangeCommand only refers markup information like html lang attribute. We want more dynamic change. Process the input sequence and insert LangChangeCommand here."""
     newseq = []
     for i, item in enumerate(seq):
@@ -216,7 +206,7 @@ def modseq(seq, lang):
         if isinstance(item, str):
             # Convert some chars which some Japanese synths cannot read properly
             item = item.translate(jpn_translate)
-            newseq.extend(stringsplit(item, lang))
+            newseq.extend(stringsplit(item, last_lang))
         else:
             newseq.append(item)
     return newseq
@@ -239,12 +229,16 @@ jpn_translate = {
 def char2kind(u):
     """Returns kind of character, which is represented by a unicode codepoint. Used as an internal function from str2kind."""
     if (u >= 0x3000 and u <= 0x30ff) or (u >= 0x4e00 and u <= 0x9fbf) or (u >= 0xff00 and u <= 0xffef) or (u >= 0x2160 and u <= 0x2169):
-        return _umlLanguages.JAPANESE
+        return _umlCodes.JAPANESE
     # end japanese
     # Currently, non-Japanese is considered as English. Add logic when supporting other languages.
-    return _umlLanguages.ENGLISH
+    return _umlCodes.ENGLISH
 
 
-def str2kind(s, idx):
+def str2kind(s, idx, lastkind):
     """Returns kind at the specified index of the specified string."""
+    char = ord(s[idx])
+    if char >= 0x30 and char<= 0x39:
+        # Use the last language for numbers
+        return lastkind
     return char2kind(ord(s[idx]))

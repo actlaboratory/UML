@@ -1,3 +1,4 @@
+from re import I
 import wx
 import addonHandler
 
@@ -8,20 +9,30 @@ except BaseException:
 
 
 class SettingsDialog(wx.Dialog):
-    def __init__(self):
+    langValues = [
+        {"internal": "ja", "user": _("Japanese")},
+        {"internal": "en", "user": _("Non-Japanese")},
+    ]
+    strategyValues = [
+        {"internal": "sentence", "user": _("Sentence")},
+        {"internal": "word", "user": _("Word")},
+    ]
+
+    def __init__(self, opts):
         wx.Dialog.__init__(
             self, None, -1, _("Universal Multilingual settings"), size=(800, 600))
 
         lang = _("Primary language")
         langLabel = wx.StaticText(self, wx.ID_ANY, label=lang, name=lang)
         self.langList = wx.ListBox(self, wx.ID_ANY, name=lang)
-        self.langList.InsertItems([_("Japanese"), _("non-Japanese")], 0)
+        self.langList.InsertItems([x["user"] for x in self.langValues], 0)
 
         strategy = _("Switching strategy")
         strategyLabel = wx.StaticText(
             self, wx.ID_ANY, label=strategy, name=strategy)
         self.strategyList = wx.ListBox(self, wx.ID_ANY, name=strategy)
-        self.strategyList.InsertItems([_("Word"), _("Sentence")], 0)
+        self.strategyList.InsertItems([x["user"]
+                                       for x in self.strategyValues], 0)
 
         ok = wx.Button(self, wx.ID_OK, _("OK"))
         ok.SetDefault()
@@ -45,5 +56,26 @@ class SettingsDialog(wx.Dialog):
         msz.Add(bsz, 1, wx.EXPAND)
         self.SetSizer(msz)
 
+        langIndex = self._searchValue(
+            self.langValues, lambda x: x["internal"] == opts["primary_language"])
+        strategyIndex = self._searchValue(
+            self.strategyValues, lambda x: x["internal"] == opts["strategy"])
+        self.langList.Select(langIndex)
+        self.strategyList.Select(strategyIndex)
+
+    def _searchValue(self, ref, cond):
+        i = 0
+        for elem in ref:
+            if cond(elem):
+                return i
+            # end found
+            i += 1
+        # end for
+        return 0
+    # end _searchValue
+
     def GetData(self):
-        return None
+        return {
+            "primary_language": self.langValues[self.langList.GetSelection()]["internal"],
+            "strategy": self.strategyValues[self.strategyList.GetSelection()]["internal"],
+        }
