@@ -1,5 +1,6 @@
 import wx
 import addonHandler
+from . import engineSelection
 
 try:
     addonHandler.initTranslation()
@@ -34,12 +35,19 @@ class SettingsDialog(wx.Dialog):
                                        for x in self.strategyValues], 0)
 
         engines = _("Speech engines")
-        enginesLabel = wx.StaticText(self, wx.ID_ANY, label=engines, name=engines)
-        self.enginesList = wx.ListCtrl(self, wx.ID_ANY, name=engines, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
+        enginesLabel = wx.StaticText(
+            self, wx.ID_ANY, label=engines, name=engines)
+        self.enginesList = wx.ListCtrl(
+            self, wx.ID_ANY, name=engines, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
         self.enginesList.AppendColumn(_("Language"), wx.LIST_FORMAT_LEFT)
         self.enginesList.AppendColumn(_("Engine"), wx.LIST_FORMAT_LEFT)
         for elem in self.langValues:
             self.enginesList.Append((elem["user"], "not set"))
+
+        sbtnLabel = _("Select engine")
+        self.selectEngineButton = wx.Button(
+            self, wx.ID_ANY, label=sbtnLabel, name=sbtnLabel)
+        self.selectEngineButton.Bind(wx.EVT_BUTTON, self.onSynthSelect)
 
         ok = wx.Button(self, wx.ID_OK, _("OK"))
         ok.SetDefault()
@@ -91,3 +99,12 @@ class SettingsDialog(wx.Dialog):
             "primary_language": self.langValues[self.langList.GetSelection()]["internal"],
             "strategy": self.strategyValues[self.strategyList.GetSelection()]["internal"],
         }
+
+    def onSynthSelect(self, evt):
+        selected = self.enginesList.GetFocusedItem()
+        if selected == -1:
+            return
+        lang = self.langValues[selected]["user"]
+        dlg = engineSelection.EngineSelectionDialog(lang, None)
+        dlg.ShowModal()
+        dlg.Destroy()
