@@ -1,4 +1,3 @@
-from re import I
 import wx
 import addonHandler
 
@@ -34,6 +33,14 @@ class SettingsDialog(wx.Dialog):
         self.strategyList.InsertItems([x["user"]
                                        for x in self.strategyValues], 0)
 
+        engines = _("Speech engines")
+        enginesLabel = wx.StaticText(self, wx.ID_ANY, label=engines, name=engines)
+        self.enginesList = wx.ListCtrl(self, wx.ID_ANY, name=engines, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
+        self.enginesList.AppendColumn(_("Language"), wx.LIST_FORMAT_LEFT)
+        self.enginesList.AppendColumn(_("Engine"), wx.LIST_FORMAT_LEFT)
+        for elem in self.langValues:
+            self.enginesList.Append((elem["user"], "not set"))
+
         ok = wx.Button(self, wx.ID_OK, _("OK"))
         ok.SetDefault()
         cancel = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
@@ -46,6 +53,10 @@ class SettingsDialog(wx.Dialog):
         ssz.Add(strategyLabel, 1, wx.EXPAND)
         ssz.Add(self.strategyList, 1, wx.EXPAND)
 
+        esz = wx.BoxSizer(wx.HORIZONTAL)
+        esz.Add(enginesLabel, 1, wx.EXPAND)
+        esz.Add(self.enginesList, 1, wx.EXPAND)
+
         bsz = wx.BoxSizer(wx.HORIZONTAL)
         bsz.Add(ok, 1, wx.EXPAND)
         bsz.Add(cancel, 1, wx.EXPAND)
@@ -53,6 +64,7 @@ class SettingsDialog(wx.Dialog):
         msz = wx.BoxSizer(wx.VERTICAL)
         msz.Add(lsz, 1, wx.EXPAND)
         msz.Add(ssz, 1, wx.EXPAND)
+        msz.Add(esz, 1, wx.EXPAND)
         msz.Add(bsz, 1, wx.EXPAND)
         self.SetSizer(msz)
 
