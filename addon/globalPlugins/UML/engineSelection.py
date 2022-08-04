@@ -9,17 +9,15 @@ except BaseException:
 
 
 class EngineSelectionDialog(wx.Dialog):
-    def __init__(self, language, focusedEngineIdentifier=None):
+    def __init__(self, synths, language, focusedEngineIdentifier=None):
         wx.Dialog.__init__(
             self, None, -1, _("Select synthesizer for %s language") % (language), size=(300, 500))
-        # Need to exclude Universal Multilingual itself and silence.
-        # [0]: internal identifier, [1]: display name
-        synths = [x for x in synthDriverHandler.getSynthList() if x[0] not in ["UML", "silence"]]
-
+        self.synths = synths
         synth = _("Synthesizer")
         synthLabel = wx.StaticText(self, wx.ID_ANY, label=synth, name=synth)
         self.synthList = wx.ListBox(self, wx.ID_ANY, name=synth)
-        self.synthList.InsertItems([x[1] for x in synths], 0)
+        self.synthList.InsertItems([x[1] for x in self.synths], 0)
+
         ok = wx.Button(self, wx.ID_OK, _("OK"))
         ok.SetDefault()
         cancel = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
@@ -38,4 +36,5 @@ class EngineSelectionDialog(wx.Dialog):
         self.SetSizer(msz)
 
     def GetData(self):
-        pass
+        s = self.synthList.GetSelection()
+        return self.synths[s][0] if s >= 0 else ""

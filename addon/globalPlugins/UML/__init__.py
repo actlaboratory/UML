@@ -21,6 +21,8 @@ except BaseException:
 confspec = {
     "primaryLanguage": "string(default=ja)",
     "strategy": "string(default=word)",
+    "japanese": "string(default=_)",
+    "fallback": "string(default=_)",
     "checkForUpdatesOnStartup": "boolean(default=True)",
 }
 config.conf.spec["UML_global"] = confspec
@@ -75,9 +77,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             2, wx.ID_ANY, _("Universal Multilingual"), self.rootMenu)
 
     def settings(self, evt):
+        engineMap = {
+            "ja": config.conf["UML_global"]["japanese"],
+            "en": config.conf["UML_global"]["fallback"],
+        }
         opts = {
             "primary_language": config.conf["UML_global"]["primaryLanguage"],
             "strategy": config.conf["UML_global"]["strategy"],
+            "engineMap": engineMap,
         }
         dlg = SettingsDialog(opts)
         ret = dlg.ShowModal()
@@ -85,6 +92,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             data = dlg.GetData()
             config.conf["UML_global"]["primaryLanguage"] = data["primary_language"]
             config.conf["UML_global"]["strategy"] = data["strategy"]
+            config.conf["UML_global"]["japanese"] = data["engineMap"]["ja"]
+            config.conf["UML_global"]["fallback"] = data["engineMap"]["en"]
         dlg.Destroy()
 
     def updateCheckToggleString(self):

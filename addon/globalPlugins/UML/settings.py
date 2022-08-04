@@ -1,5 +1,7 @@
 import wx
 import addonHandler
+import copy
+import synthDriverHandler
 from . import engineSelection
 
 try:
@@ -22,6 +24,12 @@ class SettingsDialog(wx.Dialog):
         wx.Dialog.__init__(
             self, None, -1, _("Universal Multilingual settings"), size=(800, 600))
 
+        # Need to exclude Universal Multilingual itself and silence.
+        # [0]: internal identifier, [1]: display name
+        self.synths = [x for x in synthDriverHandler.getSynthList() if x[0] not in [
+            "UML", "silence"]]
+        self.engineMap = copy.copy(opts["engineMap"])
+
         lang = _("Primary language")
         langLabel = wx.StaticText(self, wx.ID_ANY, label=lang, name=lang)
         self.langList = wx.ListBox(self, wx.ID_ANY, name=lang)
@@ -41,9 +49,7 @@ class SettingsDialog(wx.Dialog):
             self, wx.ID_ANY, name=engines, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
         self.enginesList.AppendColumn(_("Language"), wx.LIST_FORMAT_LEFT)
         self.enginesList.AppendColumn(_("Engine"), wx.LIST_FORMAT_LEFT)
-        for elem in self.langValues:
-            self.enginesList.Append((elem["user"], "not set"))
-
+        self._updateEngineList(self.enginesList, self.engineMap, self.synths)
         sbtnLabel = _("Select engine")
         self.selectEngineButton = wx.Button(
             self, wx.ID_ANY, label=sbtnLabel, name=sbtnLabel)
@@ -94,10 +100,27 @@ class SettingsDialog(wx.Dialog):
         return 0
     # end _searchValue
 
+    def _updateEngineList(self, ctrl, engineMap, synths):
+        ctrl.DeleteAllItems()
+        for elem in self.langValues:
+            resolved = self._findSynthDisplayName(
+                self.synths, engineMap[elem["internal"]])
+            stat = resolved if resolved != "" else _("Not set")
+            ctrl.Append((elem["user"], stat))
+
+    def _findSynthDisplayName(self, synths, target):
+        for elem in synths:
+            if elem[0] == target:
+                return elem[1]
+            # end found
+        # end for
+        return ""
+
     def GetData(self):
         return {
             "primary_language": self.langValues[self.langList.GetSelection()]["internal"],
             "strategy": self.strategyValues[self.strategyList.GetSelection()]["internal"],
+            "engineMap": self.engineMap,
         }
 
     def onSynthSelect(self, evt):
@@ -105,6 +128,12 @@ class SettingsDialog(wx.Dialog):
         if selected == -1:
             return
         lang = self.langValues[selected]["user"]
-        dlg = engineSelection.EngineSelectionDialog(lang, None)
-        dlg.ShowModal()
+        focus = self.engineMap[self.langValues[selected]["internal"]]
+        dlg = engineSelection.EngineSelectionDialog(self.synths, lang, focus)
+        ret = dlg.ShowModal()
+        if ret == wx.ID_OK:
+            self.engineMap[self.langValues[selected]
+                           ["internal"]] = dlg.GetData()
+            self._updateEngineList(
+                self.enginesList, self.engineMap, self.synths)
         dlg.Destroy()
