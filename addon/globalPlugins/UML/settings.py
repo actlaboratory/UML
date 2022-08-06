@@ -1,3 +1,4 @@
+
 import wx
 import addonHandler
 import copy
@@ -22,7 +23,7 @@ class SettingsDialog(wx.Dialog):
 
     def __init__(self, opts):
         wx.Dialog.__init__(
-            self, None, -1, _("Universal Multilingual settings"), size=(800, 600))
+            self, None, -1, _("Universal Multilingual settings"), size=(600,400))
 
         # Need to exclude Universal Multilingual itself and silence.
         # [0]: internal identifier, [1]: display name
@@ -30,56 +31,61 @@ class SettingsDialog(wx.Dialog):
             "UML", "silence"]]
         self.engineMap = copy.copy(opts["engineMap"])
 
+        msz = wx.BoxSizer(wx.VERTICAL)
+
         lang = _("Primary language")
         langLabel = wx.StaticText(self, wx.ID_ANY, label=lang, name=lang)
         self.langList = wx.ListBox(self, wx.ID_ANY, name=lang)
         self.langList.InsertItems([x["user"] for x in self.langValues], 0)
 
+        lsz = wx.BoxSizer(wx.HORIZONTAL)
+        lsz.Add(langLabel,1)
+        lsz.Add(self.langList,1)
+        msz.Add(lsz, 0, wx.EXPAND)
+        msz.AddSpacer(20)
+
+
         strategy = _("Switching strategy")
         strategyLabel = wx.StaticText(
             self, wx.ID_ANY, label=strategy, name=strategy)
         self.strategyList = wx.ListBox(self, wx.ID_ANY, name=strategy)
-        self.strategyList.InsertItems([x["user"]
-                                       for x in self.strategyValues], 0)
+        self.strategyList.InsertItems([x["user"] for x in self.strategyValues], 0)
+
+        ssz = wx.BoxSizer(wx.HORIZONTAL)
+        ssz.Add(strategyLabel, 1)
+        ssz.Add(self.strategyList,1)
+        msz.Add(ssz, 0, wx.EXPAND)
+        msz.AddSpacer(20)
+
 
         engines = _("Speech engines")
         enginesLabel = wx.StaticText(
             self, wx.ID_ANY, label=engines, name=engines)
         self.enginesList = wx.ListCtrl(
             self, wx.ID_ANY, name=engines, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
-        self.enginesList.AppendColumn(_("Language"), wx.LIST_FORMAT_LEFT)
-        self.enginesList.AppendColumn(_("Engine"), wx.LIST_FORMAT_LEFT)
+        self.enginesList.AppendColumn(_("Language"), wx.LIST_FORMAT_LEFT,100)
+        self.enginesList.AppendColumn(_("Engine"), wx.LIST_FORMAT_LEFT,250)
         self._updateEngineList(self.enginesList, self.engineMap, self.synths)
         sbtnLabel = _("Select engine")
         self.selectEngineButton = wx.Button(
             self, wx.ID_ANY, label=sbtnLabel, name=sbtnLabel)
         self.selectEngineButton.Bind(wx.EVT_BUTTON, self.onSynthSelect)
 
+        msz.Add(enginesLabel)
+        msz.Add(self.enginesList,0,wx.EXPAND)
+        msz.Add(self.selectEngineButton,1,wx.ALIGN_RIGHT)
+        msz.AddSpacer(40)
+
+
         ok = wx.Button(self, wx.ID_OK, _("OK"))
         ok.SetDefault()
         cancel = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
 
-        lsz = wx.BoxSizer(wx.HORIZONTAL)
-        lsz.Add(langLabel, 1, wx.EXPAND)
-        lsz.Add(self.langList, 1, wx.EXPAND)
-
-        ssz = wx.BoxSizer(wx.HORIZONTAL)
-        ssz.Add(strategyLabel, 1, wx.EXPAND)
-        ssz.Add(self.strategyList, 1, wx.EXPAND)
-
-        esz = wx.BoxSizer(wx.HORIZONTAL)
-        esz.Add(enginesLabel, 1, wx.EXPAND)
-        esz.Add(self.enginesList, 1, wx.EXPAND)
-
         bsz = wx.BoxSizer(wx.HORIZONTAL)
-        bsz.Add(ok, 1, wx.EXPAND)
-        bsz.Add(cancel, 1, wx.EXPAND)
+        bsz.Add(ok,0)
+        bsz.Add(cancel)
+        msz.Add(bsz, 0, wx.ALIGN_RIGHT)
 
-        msz = wx.BoxSizer(wx.VERTICAL)
-        msz.Add(lsz, 1, wx.EXPAND)
-        msz.Add(ssz, 1, wx.EXPAND)
-        msz.Add(esz, 1, wx.EXPAND)
-        msz.Add(bsz, 1, wx.EXPAND)
         self.SetSizer(msz)
 
         langIndex = self._searchValue(
@@ -88,6 +94,9 @@ class SettingsDialog(wx.Dialog):
             self.strategyValues, lambda x: x["internal"] == opts["strategy"])
         self.langList.Select(langIndex)
         self.strategyList.Select(strategyIndex)
+
+        msz.Fit(self)
+        self.Centre()
 
     def _searchValue(self, ref, cond):
         i = 0
