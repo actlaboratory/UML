@@ -6,6 +6,7 @@ import wx
 import addonHandler
 import globalVars
 import config
+import synthDriverHandler
 from logHandler import log
 from .constants import *
 from .settings import SettingsDialog
@@ -89,12 +90,40 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         dlg = SettingsDialog(opts)
         ret = dlg.ShowModal()
         if ret == wx.ID_OK:
-            data = dlg.GetData()
-            config.conf["UML_global"]["primaryLanguage"] = data["primary_language"]
-            config.conf["UML_global"]["strategy"] = data["strategy"]
-            config.conf["UML_global"]["japanese"] = data["engineMap"]["ja"]
-            config.conf["UML_global"]["fallback"] = data["engineMap"]["en"]
+            self._saveSettings(dlg.GetData())
         dlg.Destroy()
+
+    def _saveSettings(self, data):
+        # If the new settings fail, revert to the previous one.
+        backup = list(config.conf["UML_global"].items())
+        config.conf["UML_global"]["primaryLanguage"] = data["primary_language"]
+        config.conf["UML_global"]["strategy"] = data["strategy"]
+        config.conf["UML_global"]["japanese"] = data["engineMap"]["ja"]
+        config.conf["UML_global"]["fallback"] = data["engineMap"]["en"]
+        if synthDriverHandler.getSynth().name == "UML":
+            self._askHotReload(backup)
+
+    def _askHotReload(self, backup):
+        ret = gui.messageBox(_("You are currently using Universal Multilingual.\nDo you want to reload Universal Multilingual and apply the new settings now?"), caption=_(
+            "Confirmation"), style=wx.YES_NO)
+        if ret == wx.ID_NO:
+            return
+
+        synthDriverHandler.setSynth(None)
+
+        # Try to create new synth
+        try:
+            newSynth = synthDriverHandler.getSynthInstance(
+                "UML", asDefault=True)
+        except BaseException as e:
+            for elem in backup:
+                config.conf["UML_global"][elem[0]] = elem[1]
+            synthDriverHandler.setSynth("UML")
+            gui.messageBox(_("Failed to reload Universal multilingual.\nreason: %s\nThe new settings will not be applied.") % (
+                e), _("Error"))
+            return
+        # end exception
+        synthDriverHandler._curSynth = newSynth
 
     def updateCheckToggleString(self):
         return _("Disable checking for updates on startup") if self.getUpdateCheckSetting() is True else _("Enable checking for updates on startup")

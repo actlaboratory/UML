@@ -10,6 +10,10 @@ import threading
 from . import _umlCodes
 
 
+class InitializationError(Exception):
+    pass
+
+
 bgQueue = queue.Queue()
 
 
@@ -60,13 +64,18 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.synthIdentifierMap = {
             'en': config.conf["UML_global"]["fallback"],
             'ja': config.conf["UML_global"]["japanese"],
-}
+        }
 
         self.synthInstanceMap = {}
         for k, v in self.synthIdentifierMap.items():
-            synth = synthDriverHandler._getSynthDriver(v)()
-            synth.initSettings()
-            self.synthInstanceMap[k] = synth
+            try:
+                synth = synthDriverHandler._getSynthDriver(v)()
+                synth.initSettings()
+                self.synthInstanceMap[k] = synth
+            except BaseException as e:
+                raise InitializationError(
+                    "Failed to load %s (reason: %s)" % (v, e))
+            # end wrap errors on exception
         # end load synth for all languages
         self.cur_synth = None
         self.lock = threading.Lock()
@@ -142,13 +151,11 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.lastindex = None
         self.last_lang = 'en'
         self.done.set()
-        print("cancelled")
 
     def on_done(self, synth):
         if synth == self:
             return
         with self.lock:
-            print(f"Done: {synth}")
             if synth == self.cur_synth:
                 self.done.set()
 
@@ -237,7 +244,7 @@ def char2kind(u):
 def str2kind(s, idx, lastkind):
     """Returns kind at the specified index of the specified string."""
     char = ord(s[idx])
-    if char >= 0x30 and char<= 0x39:
+    if char >= 0x30 and char <= 0x39:
         # Use the last language for numbers
         return lastkind
     return char2kind(ord(s[idx]))
