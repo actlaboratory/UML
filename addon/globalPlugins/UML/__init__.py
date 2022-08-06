@@ -19,6 +19,16 @@ except BaseException:
     def _(x): return x
 
 
+# Define conspec here too. Looks like it fails to access some values when UML is not set as speech synthesizer.
+confspec = {
+    "primaryLanguage": "string(default=ja)",
+    "strategy": "string(default=word)",
+    "japanese": "string(default=_)",
+    "fallback": "string(default=_)",
+    "checkForUpdatesOnStartup": "boolean(default=True)",
+}
+config.conf.spec["UML_global"] = confspec
+
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     scriptCategory = _("UML")
 
