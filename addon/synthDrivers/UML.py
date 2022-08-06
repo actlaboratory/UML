@@ -2,19 +2,13 @@
 # Copyright (C) 2022 Yukio Nozawa, ACT Laboratory
 # Some code provided by the NVDA community
 
+import config
 import synthDriverHandler
 from speech.commands import IndexCommand, LangChangeCommand
 import queue
 import threading
 from . import _umlCodes
 
-SYNTH1 = 'espeak'
-SYNTH2 = 'HISS'
-
-synthIdentifierMap = {
-    'en': 'espeak',
-    'ja': 'HISS',
-}
 
 bgQueue = queue.Queue()
 
@@ -63,8 +57,13 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         return True
 
     def __init__(self):
+        self.synthIdentifierMap = {
+            'en': config.conf["UML_global"]["fallback"],
+            'ja': config.conf["UML_global"]["japanese"],
+}
+
         self.synthInstanceMap = {}
-        for k, v in synthIdentifierMap.items():
+        for k, v in self.synthIdentifierMap.items():
             synth = synthDriverHandler._getSynthDriver(v)()
             synth.initSettings()
             self.synthInstanceMap[k] = synth
