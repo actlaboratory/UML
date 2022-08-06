@@ -100,16 +100,11 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         seq = modseq(seq, self.last_lang)
         synth = self.synthInstanceMap[self.last_lang]
         textList = []
-        lastindex = None
         for i, item in enumerate(seq):
             if isinstance(item, LangChangeCommand):
                 if item.lang == self.last_lang:
                     continue
                 if textList:
-                    if lastindex:
-                        textList.append(IndexCommand(lastindex))
-                        lastindex = None
-                    # end lastIndex exists
                     _execWhenDone(self.wait_speak, synth, textList[:])
                     textList = []
                 # end textList exists
@@ -120,12 +115,10 @@ class SynthDriver(synthDriverHandler.SynthDriver):
                     synth = self.synthInstanceMap['ja']
             # end LangChangeCommand
             elif isinstance(item, IndexCommand):
-                lastindex = item.index
+                textList.append(item)
             elif isinstance(item, str):
                 textList.append(item)
         # do the final speaking
-        if lastindex:
-            textList.append(IndexCommand(lastindex))
         if textList:
             _execWhenDone(self.wait_speak, synth, textList[:])
             textList = []
