@@ -9,6 +9,16 @@ import queue
 import threading
 from . import _umlCodes
 
+# On NVDA startup, SynthDriver objects are imported first. If confspec is in UML GlobalPlugin, accessing to the config values seems to make an invalid cache and breaks UML config. Define conficspec here.
+confspec = {
+    "primaryLanguage": "string(default=ja)",
+    "strategy": "string(default=word)",
+    "japanese": "string(default=_)",
+    "fallback": "string(default=_)",
+    "checkForUpdatesOnStartup": "boolean(default=True)",
+}
+config.conf.spec["UML_global"] = confspec
+
 
 class InitializationError(Exception):
     pass
@@ -61,6 +71,11 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         return True
 
     def __init__(self):
+        self.primary_lang = "ja"
+        if "primaryLanguage" in config.conf["UML_global"]:
+            # For some reason, primaryLanguage might be inaccessible on NVDA startup. Still haven't figured out why. Maybe configSpec is not loaded yet?
+            self.primary_lang = config.conf["UML_global"]["primaryLanguage"]
+        self.last_lang = self.primary_lang
         self.synthIdentifierMap = {
             'en': config.conf["UML_global"]["fallback"],
             'ja': config.conf["UML_global"]["japanese"],
@@ -79,7 +94,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         # end load synth for all languages
         self.cur_synth = None
         self.lock = threading.Lock()
-        self.last_lang = ''
         self.lastindex = None
         synthDriverHandler.synthDoneSpeaking.register(self.on_done)
         synthDriverHandler.synthIndexReached.register(self.on_index)

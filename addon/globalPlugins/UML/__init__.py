@@ -19,16 +19,6 @@ except BaseException:
     def _(x): return x
 
 
-confspec = {
-    "primaryLanguage": "string(default=ja)",
-    "strategy": "string(default=word)",
-    "japanese": "string(default=_)",
-    "fallback": "string(default=_)",
-    "checkForUpdatesOnStartup": "boolean(default=True)",
-}
-config.conf.spec["UML_global"] = confspec
-
-
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     scriptCategory = _("UML")
 
@@ -87,6 +77,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             "strategy": config.conf["UML_global"]["strategy"],
             "engineMap": engineMap,
         }
+        print(opts)
         dlg = SettingsDialog(opts)
         ret = dlg.ShowModal()
         if ret == wx.ID_OK:
@@ -140,7 +131,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         updater.AutoUpdateChecker().autoUpdateCheck(mode=updater.MANUAL)
 
     def getUpdateCheckSetting(self):
-        return config.conf["HISS_global"]["checkForUpdatesOnStartup"]
+        return config.conf["UML_global"]["checkForUpdatesOnStartup"]
 
     def setUpdateCheckSetting(self, val):
-        config.conf["HISS_global"]["checkForUpdatesOnStartup"] = val
+        config.conf["UML_global"]["checkForUpdatesOnStartup"] = val
