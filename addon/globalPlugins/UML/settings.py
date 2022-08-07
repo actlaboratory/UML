@@ -23,7 +23,7 @@ class SettingsDialog(wx.Dialog):
 
     def __init__(self, opts):
         wx.Dialog.__init__(
-            self, None, -1, _("Universal Multilingual settings"), size=(600,400))
+            self, None, -1, _("Universal Multilingual settings"), size=(600, 400))
 
         # Need to exclude Universal Multilingual itself and silence.
         # [0]: internal identifier, [1]: display name
@@ -39,32 +39,31 @@ class SettingsDialog(wx.Dialog):
         self.langList.InsertItems([x["user"] for x in self.langValues], 0)
 
         lsz = wx.BoxSizer(wx.HORIZONTAL)
-        lsz.Add(langLabel,1)
-        lsz.Add(self.langList,1)
+        lsz.Add(langLabel, 1)
+        lsz.Add(self.langList, 1)
         msz.Add(lsz, 0, wx.EXPAND)
         msz.AddSpacer(20)
-
 
         strategy = _("Switching strategy")
         strategyLabel = wx.StaticText(
             self, wx.ID_ANY, label=strategy, name=strategy)
         self.strategyList = wx.ListBox(self, wx.ID_ANY, name=strategy)
-        self.strategyList.InsertItems([x["user"] for x in self.strategyValues], 0)
+        self.strategyList.InsertItems([x["user"]
+                                       for x in self.strategyValues], 0)
 
         ssz = wx.BoxSizer(wx.HORIZONTAL)
         ssz.Add(strategyLabel, 1)
-        ssz.Add(self.strategyList,1)
+        ssz.Add(self.strategyList, 1)
         msz.Add(ssz, 0, wx.EXPAND)
         msz.AddSpacer(20)
-
 
         engines = _("Speech engines")
         enginesLabel = wx.StaticText(
             self, wx.ID_ANY, label=engines, name=engines)
         self.enginesList = wx.ListCtrl(
             self, wx.ID_ANY, name=engines, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
-        self.enginesList.AppendColumn(_("Language"), wx.LIST_FORMAT_LEFT,100)
-        self.enginesList.AppendColumn(_("Engine"), wx.LIST_FORMAT_LEFT,250)
+        self.enginesList.AppendColumn(_("Language"), wx.LIST_FORMAT_LEFT, 100)
+        self.enginesList.AppendColumn(_("Engine"), wx.LIST_FORMAT_LEFT, 250)
         self._updateEngineList(self.enginesList, self.engineMap, self.synths)
         sbtnLabel = _("Select engine")
         self.selectEngineButton = wx.Button(
@@ -72,17 +71,16 @@ class SettingsDialog(wx.Dialog):
         self.selectEngineButton.Bind(wx.EVT_BUTTON, self.onSynthSelect)
 
         msz.Add(enginesLabel)
-        msz.Add(self.enginesList,0,wx.EXPAND)
-        msz.Add(self.selectEngineButton,1,wx.ALIGN_RIGHT)
+        msz.Add(self.enginesList, 0, wx.EXPAND)
+        msz.Add(self.selectEngineButton, 1, wx.ALIGN_RIGHT)
         msz.AddSpacer(40)
-
 
         ok = wx.Button(self, wx.ID_OK, _("OK"))
         ok.SetDefault()
         cancel = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
 
         bsz = wx.BoxSizer(wx.HORIZONTAL)
-        bsz.Add(ok,0)
+        bsz.Add(ok, 0)
         bsz.Add(cancel)
         msz.Add(bsz, 0, wx.ALIGN_RIGHT)
 
@@ -136,9 +134,10 @@ class SettingsDialog(wx.Dialog):
         selected = self.enginesList.GetFocusedItem()
         if selected == -1:
             return
-        lang = self.langValues[selected]["user"]
+        lang = self.langValues[selected]
         focus = self.engineMap[self.langValues[selected]["internal"]]
-        dlg = engineSelection.EngineSelectionDialog(self.synths, lang, focus)
+        dlg = engineSelection.EngineSelectionDialog(
+            self.synths, lang, self.engineMap, focus)
         ret = dlg.ShowModal()
         if ret == wx.ID_OK:
             self.engineMap[self.langValues[selected]
