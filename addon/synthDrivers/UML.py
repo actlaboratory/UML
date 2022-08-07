@@ -159,7 +159,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         for v in self.synthInstanceMap.values():
             v.cancel()
         self.lastindex = None
-        self.last_lang = 'en'
         self.done.set()
 
     def on_done(self, synth):
