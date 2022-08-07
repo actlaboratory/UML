@@ -65,6 +65,8 @@ class SettingsDialog(wx.Dialog):
         self.enginesList.AppendColumn(_("Language"), wx.LIST_FORMAT_LEFT, 100)
         self.enginesList.AppendColumn(_("Engine"), wx.LIST_FORMAT_LEFT, 250)
         self._updateEngineList(self.enginesList, self.engineMap, self.synths)
+        self.enginesList.Select(0)
+        self.enginesList.Focus(0)
         sbtnLabel = _("Select engine")
         self.selectEngineButton = wx.Button(
             self, wx.ID_ANY, label=sbtnLabel, name=sbtnLabel)

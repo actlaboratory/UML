@@ -20,6 +20,13 @@ class EngineSelectionDialog(wx.Dialog):
         synthLabel = wx.StaticText(self, wx.ID_ANY, label=synth, name=synth)
         self.synthList = wx.ListBox(self, wx.ID_ANY, name=synth)
         self.synthList.InsertItems([x[1] for x in self.synths], 0)
+        if focusedEngineIdentifier:
+            for i in range(len(self.synths)):
+                if focusedEngineIdentifier == self.synths[i][0]:
+                    self.synthList.Select(i)
+                # found the previously selected engine
+            # end search the previously selected engine
+        # end previous engine is specified
 
         ok = wx.Button(self, wx.ID_OK, _("OK"))
         ok.SetDefault()
