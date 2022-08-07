@@ -71,7 +71,10 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         return True
 
     def __init__(self):
-        self.primary_lang = "ja"
+        self.strategy = "word"
+        if "strategy" in config.conf["UML_global"]:
+            self.strategy = config.conf["UML_global"]["strategy"]
+        self    .primary_lang = "ja"
         if "primaryLanguage" in config.conf["UML_global"]:
             # For some reason, primaryLanguage might be inaccessible on NVDA startup. Still haven't figured out why. Maybe configSpec is not loaded yet?
             self.primary_lang = config.conf["UML_global"]["primaryLanguage"]
@@ -111,7 +114,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread.join()
 
     def speak(self, seq):
-        seq = modseq(seq, self.last_lang)
+        seq = modseq(seq, self.last_lang, self.strategy)
         synth = self.synthInstanceMap[self.last_lang]
         textList = []
         for i, item in enumerate(seq):
@@ -180,8 +183,12 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         return self.last_lang
 
 
-def stringsplit(s, last_lang):
+def stringsplit(s, last_lang, strategy):
     """Processes speaking text. Returns a newly generated part of SpeechSequence."""
+    return stringsplit_word(s, last_lang) if strategy == "word" else stringsplit_sentence(s, last_lang)
+
+
+def stringsplit_word(s, last_lang):
     if s.strip() == '':
         return []
 
@@ -206,7 +213,29 @@ def stringsplit(s, last_lang):
     return lst
 
 
-def modseq(seq, last_lang):
+def stringsplit_sentence(s, last_lang):
+    if s.strip() == '':
+        return []
+
+    lst = []
+    start = 0
+    found = _umlCodes.ENGLISH
+
+    for pos, c in enumerate(s):
+        u = ord(c)
+        if u == 32:
+            continue  # spaces don't change anything
+        kind = char2kind(u)
+        if kind != _umlCodes.ENGLISH:
+            found = kind
+            break
+        # end found non-fallback
+    # end enumerate
+    lst.extend([LangChangeCommand(found), s])
+    return lst
+
+
+def modseq(seq, last_lang, strategy):
     """NVDA's LangChangeCommand only refers markup information like html lang attribute. We want more dynamic change. Process the input sequence and insert LangChangeCommand here."""
     newseq = []
     for i, item in enumerate(seq):
@@ -219,7 +248,7 @@ def modseq(seq, last_lang):
         if isinstance(item, str):
             # Convert some chars which some Japanese synths cannot read properly
             item = item.translate(jpn_translate)
-            newseq.extend(stringsplit(item, last_lang))
+            newseq.extend(stringsplit(item, last_lang, strategy))
         else:
             newseq.append(item)
     return newseq
