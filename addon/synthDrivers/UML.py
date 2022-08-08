@@ -5,6 +5,7 @@
 import config
 import synthDriverHandler
 from speech.commands import IndexCommand, LangChangeCommand
+import speech
 import queue
 import threading
 from . import _umlCodes
@@ -18,6 +19,11 @@ confspec = {
     "checkForUpdatesOnStartup": "boolean(default=True)",
 }
 config.conf.spec["UML_global"] = confspec
+
+# We need to hook into speech.speak function for evaluating correct language. This is because NVDA pre-composes character descriptions of which we must switch the language.
+
+origSpeak = None
+instance = None
 
 
 class InitializationError(Exception):
@@ -104,8 +110,16 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread = BgThread()
         self.thread.daemon = True
         self.thread.start()
+        global origSpeak, instance
+        origSpeak = speech.speech.speak
+        instance = self
+        speech.speech.speak = hookedSpeak
 
     def terminate(self):
+        global origSpeak, instance
+        speech.speech.speak = origSpeak
+        origSpeak = None
+        instance = None
         for v in self.synthInstanceMap.values():
             v.terminate()
         synthDriverHandler.synthDoneSpeaking.unregister(self.on_done)
@@ -114,7 +128,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread.join()
 
     def speak(self, seq):
-        seq = modseq(seq, self.last_lang, self.strategy)
+        print("s seq: %s" % seq)
         synth = self.synthInstanceMap[self.last_lang]
         textList = []
         for i, item in enumerate(seq):
@@ -283,3 +297,8 @@ def str2kind(s, idx, lastkind):
         # Use the last language for numbers
         return lastkind
     return char2kind(ord(s[idx]))
+
+
+def hookedSpeak(speechSequence, symbolLevel=None, priority=speech.Spri.NORMAL):
+    seq = modseq(speechSequence, instance.last_lang, instance.strategy)
+    origSpeak(seq, symbolLevel, priority)
