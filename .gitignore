@@ -9,3 +9,6 @@ addon/data/dictionary/english.dic
 *.py[co]
 *.nvda-addon
 .sconsign.dblite
+output/
+UML-snapshot.zip
+UML-snapshot_info.json

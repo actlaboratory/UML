@@ -13,10 +13,17 @@ def _(arg):
     return arg
 
 
+ADDON_VERSION = "1.0.0"
+ADDON_RELEASE_DATE = "2022-08-11"
+ADDON_NAME = "UniversalMultilingual"
+ADDON_KEYWORD = "UML"
+
+
+
 # Add-on information variables
 addon_info = {
     # add-on Name/identifier, internal for NVDA
-    "addon_name": "UML",
+    "addon_name": ADDON_NAME,
     # Add-on summary, usually the user visible name of the addon.
     # Translators: Summary for this add-on
     # to be shown on installation and add-on information found in Add-ons Manager.
@@ -25,9 +32,9 @@ addon_info = {
     # Translators: Long description to be shown for this add-on on add-on information from add-ons manager
     "addon_description": _("""This add-on automatically switches synthDrivers based on languages. Currently, it only supports Japanese and non-Japanese switching."""),
     # version
-    "addon_version": "1.0.0",
+    "addon_version": ADDON_VERSION,
     # Author(s)
-    "addon_author": "Accessible Tools Laboratory <support@actlab.org>",
+    "addon_author": "Yukio Nozawa - Accessible Tools Laboratory <support@actlab.org>",
     # URL for the add-on documentation support
     "addon_url": "https://actlab.org/software/UML",
     # Documentation file name
