@@ -1,5 +1,6 @@
 addon/doc/*.css
 addon/data/dictionary/english.dic
+public/*.md
 *_docHandler.py
 *.html
 *.ini
