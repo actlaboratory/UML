@@ -4,6 +4,10 @@
 
 This add-on detects the language that NVDA is currently reading, and switches between different speech engines based on the detected language. Currently, it supports Japanese and non-Japanese identification only. We are willing to add detectable languages and improve the detection logic based on user contributions / suggestions.
 
+## System requirements
+
+Minimum supported NVDA version is 2021.1.
+
 ## Usage
 
 1. Install this add-on.
