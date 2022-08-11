@@ -95,7 +95,7 @@ class build:
 
 	def build(self, package_path, build_filename):
 		print("Building...")
-		shutil.copytree("public", package_path)
+		os.mkdir(package_path)
 		shutil.copyfile("addon\\doc\\en\\readme.md", os.path.join(package_path, "readme_en.txt"))
 		shutil.copyfile("addon\\doc\\ja\\readme.md", os.path.join(package_path, "readme_ja.txt"))
 		shutil.copyfile("license", os.path.join(package_path, "license.txt"))
