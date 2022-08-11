@@ -22,7 +22,7 @@ except BaseException:
 # Define conspec here too. Looks like it fails to access some values when UML is not set as speech synthesizer.
 confspec = {
     "primaryLanguage": "string(default=ja)",
-    "strategy": "string(default=word)",
+    "strategy": "string(default=sentence)",
     "japanese": "string(default=_)",
     "fallback": "string(default=_)",
     "checkForUpdatesOnStartup": "boolean(default=True)",
