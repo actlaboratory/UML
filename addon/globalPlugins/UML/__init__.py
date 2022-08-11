@@ -87,7 +87,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             "strategy": config.conf["UML_global"]["strategy"],
             "engineMap": engineMap,
         }
-        print(opts)
         dlg = SettingsDialog(opts)
         ret = dlg.ShowModal()
         if ret == wx.ID_OK:
