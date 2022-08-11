@@ -120,11 +120,12 @@ class SynthDriver(synthDriverHandler.SynthDriver):
             speech.speech.speak = hookedSpeak
             global origSpeechWithoutPausesInstance
             origSpeechWithoutPausesInstance = speech.sayAll.SayAllHandler.speechWithoutPausesInstance
-            speech.sayAll.SayAllHandler.speechWithoutPausesInstance = speech.speechWithoutPauses.SpeechWithoutPauses(speakFunc=hookedSpeak)
+            speech.sayAll.SayAllHandler.speechWithoutPausesInstance = speech.speechWithoutPauses.SpeechWithoutPauses(
+                speakFunc=hookedSpeak)
             global isHooking
             isHooking = True
         except BaseException as E:
-            pass # Evil!
+            pass  # Evil!
 
     def terminate(self):
         global isHooking
