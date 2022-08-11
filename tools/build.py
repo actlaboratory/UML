@@ -95,9 +95,10 @@ class build:
 
 	def build(self, package_path, build_filename):
 		print("Building...")
-		shutil.copyfile("addon\\doc\\en\\readme.md", "public\\readme_en.md")
-		shutil.copyfile("addon\\doc\\ja\\readme.md", "public\\readme_ja.md")
 		shutil.copytree("public", package_path)
+		shutil.copyfile("addon\\doc\\en\\readme.md", os.path.join(package_path, "readme_en.txt"))
+		shutil.copyfile("addon\\doc\\ja\\readme.md", os.path.join(package_path, "readme_ja.txt"))
+		shutil.copyfile("license", os.path.join(package_path, "license.txt"))
 		ret = self.runcmd("scons")
 		print("build finished with status %d" % ret)
 		if ret != 0:
