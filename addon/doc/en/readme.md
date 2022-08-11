@@ -45,6 +45,8 @@ Some combinations of speech engines will not work properly. In most cases, it is
 
 In order to change settings of each speech engine, you need to switch to the speech engine from NVDA's speech settings first, then modify to your preference there. Universal Multilingual is responsible only for switching speech engines, and does not support any features which hook into the behaviors of speech engines under its control.
 
+Some events like cap pitch changing have not been supported yet. The support is planned in a near future.
+
 It is possible to add supported languages in the future, but it only supports Japanese and non-Japanese detection at the moment since there's no developers who use other languages natively. If you want additional language support, please contact ACT Laboratory.
 
 ## Contacting
