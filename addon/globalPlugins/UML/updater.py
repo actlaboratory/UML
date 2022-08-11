@@ -61,7 +61,7 @@ class NVDAAddOnUpdater ():
 
     def check_update(self):
         post_params = {
-            "name": addonName,
+            "name": "UML",
             "version": addonVersion,
             "updater_version": "1.0.0",
         }
