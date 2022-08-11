@@ -1,5 +1,4 @@
-# coding: UTF-8
-
+# reuse of this source code is prohibited.
 from __future__ import unicode_literals
 import addonHandler
 import globalVars
