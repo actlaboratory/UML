@@ -23,7 +23,9 @@ config.conf.spec["UML_global"] = confspec
 # We need to hook into speech.speak function for evaluating correct language. This is because NVDA pre-composes character descriptions of which we must switch the language.
 
 origSpeak = None
-instance = None
+origSpeechWithoutPausesInstance = None
+UMLInstance = None
+isHooking = False
 
 
 class InitializationError(Exception):
@@ -110,16 +112,31 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread = BgThread()
         self.thread.daemon = True
         self.thread.start()
-        global origSpeak, instance
-        origSpeak = speech.speech.speak
-        instance = self
-        speech.speech.speak = hookedSpeak
+        # Hook into NVDA internal, an evil cat!
+        try:
+            global origSpeak, UMLInstance
+            origSpeak = speech.speech.speak
+            UMLInstance = self
+            speech.speech.speak = hookedSpeak
+            global origSpeechWithoutPausesInstance
+            origSpeechWithoutPausesInstance = speech.sayAll.SayAllHandler.speechWithoutPausesInstance
+            speech.sayAll.SayAllHandler.speechWithoutPausesInstance = speech.speechWithoutPauses.SpeechWithoutPauses(speakFunc=hookedSpeak)
+            global isHooking
+            isHooking = True
+        except BaseException as E:
+            pass # Evil!
 
     def terminate(self):
-        global origSpeak, instance
-        speech.speech.speak = origSpeak
-        origSpeak = None
-        instance = None
+        global isHooking
+        if isHooking:
+            global origSpeak, UMLInstance
+            speech.speech.speak = origSpeak
+            speech.sayAll.SayAllHandler.speechWithoutPausesInstance = origSpeechWithoutPausesInstance
+            origSpeak = None
+            origSpeechWithoutPausesInstance = None
+            UMLInstance = None
+            isHooking = False
+        # end unhook
         for v in self.synthInstanceMap.values():
             v.terminate()
         synthDriverHandler.synthDoneSpeaking.unregister(self.on_done)
@@ -128,7 +145,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread.join()
 
     def speak(self, seq):
-        print("s seq: %s" % seq)
         synth = self.synthInstanceMap[self.last_lang]
         textList = []
         for i, item in enumerate(seq):
@@ -300,5 +316,5 @@ def str2kind(s, idx, lastkind):
 
 
 def hookedSpeak(speechSequence, symbolLevel=None, priority=speech.Spri.NORMAL):
-    seq = modseq(speechSequence, instance.last_lang, instance.strategy)
+    seq = modseq(speechSequence, UMLInstance.last_lang, UMLInstance.strategy)
     origSpeak(seq, symbolLevel, priority)
