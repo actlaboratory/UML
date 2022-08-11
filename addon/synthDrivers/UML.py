@@ -130,7 +130,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
     def terminate(self):
         global isHooking
         if isHooking:
-            global origSpeak, UMLInstance
+            global origSpeak, UMLInstance, origSpeechWithoutPausesInstance
             speech.speech.speak = origSpeak
             speech.sayAll.SayAllHandler.speechWithoutPausesInstance = origSpeechWithoutPausesInstance
             origSpeak = None
