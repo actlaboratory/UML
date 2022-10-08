@@ -67,6 +67,7 @@ def _execWhenDone(func, *args, mustBeAsync=True, **kwargs):
 
 class SayAllWatcher(threading.Thread):
     """On NVDA startup, sayAllHandler is not instantiated by NVDA. We want to hook into the object. So we use a dedicated background thread for watching sayAllHandler existence."""
+
     def run(self):
         while(True):
             if speech.sayAll.SayAllHandler is None:
@@ -131,7 +132,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         # Hook into NVDA internal, an evil cat!
         self.setHook()
 
-
     def setHook(self):
         global origSpeak, UMLInstance
         origSpeak = speech.speech.speak
@@ -142,7 +142,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         w = SayAllWatcher()
         w.setDaemon(True)
         w.start()
-
 
     def terminate(self):
         global isHooking
@@ -161,7 +160,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         synthDriverHandler.synthIndexReached.unregister(self.on_index)
         bgQueue.put((None, None, None))
         self.thread.join()
-
 
     def speak(self, seq):
         synth = self.synthInstanceMap[self.last_lang]
