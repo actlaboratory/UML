@@ -8,7 +8,6 @@ from speech.commands import IndexCommand, LangChangeCommand
 import speech
 import queue
 import threading
-import wx
 from . import _umlCodes
 
 # On NVDA startup, SynthDriver objects are imported first. If confspec is in UML GlobalPlugin, accessing to the config values seems to make an invalid cache and breaks UML config. Define conficspec here.
