@@ -58,3 +58,9 @@ It is possible to add supported languages in the future, but it only supports Ja
 If you have a GitHub account, [Universal Multilingual's issues page](https://github.com/actlaboratory/UML/issues) is the fastest path to reach us.
 
 For email support, please send an email to "support@actlab.org".
+
+## Changelog
+
+### 2022/10/20 Version 1.0.1
+
+1. Fixed an issue where UML initialization was failing When UML was loaded on NVDA startup. This issue was causing side effects such as say all command failure or synth freezing followed by an infinite loop. 
