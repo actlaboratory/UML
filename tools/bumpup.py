@@ -83,7 +83,6 @@ def bumpup(v, d):
 	with open(VERSION_FILE_NAME, "w") as f:
 		json.dump(v,f)
 	print("Saved %s." % VERSION_FILE_NAME)
-	patch(os.path.join("addon","doc","ja","readme.md"),r'# English Reading Enhancer Ver', r'\(更新:  ', v)
 	patch("buildVars.py",r'ADDON_VERSION = "', r'ADDON_RELEASE_DATE = "', v)
 
 def patch(filename, version_regexp, release_date_regexp, version_object):
