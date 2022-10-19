@@ -64,6 +64,22 @@ def _execWhenDone(func, *args, mustBeAsync=True, **kwargs):
         func(*args, **kwargs)
 
 
+class SayAllWatcher(threading.Thread):
+    """On NVDA startup, sayAllHandler is not instantiated by NVDA. We want to hook into the object. So we use a dedicated background thread for watching sayAllHandler existence."""
+
+    def run(self):
+        while(True):
+            if speech.sayAll.SayAllHandler is None:
+                continue
+            # found sayAllHandler
+            global origSpeechWithoutPausesInstance
+            origSpeechWithoutPausesInstance = speech.sayAll.SayAllHandler.speechWithoutPausesInstance
+            speech.sayAll.SayAllHandler.speechWithoutPausesInstance = speech.speechWithoutPauses.SpeechWithoutPauses(
+                speakFunc=hookedSpeak)
+            break
+        # end loop until sayAllHandler is available
+
+
 class SynthDriver(synthDriverHandler.SynthDriver):
     name = 'UML'
     description = 'Universal multilingual'
@@ -113,19 +129,18 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread.daemon = True
         self.thread.start()
         # Hook into NVDA internal, an evil cat!
-        try:
-            global origSpeak, UMLInstance
-            origSpeak = speech.speech.speak
-            UMLInstance = self
-            speech.speech.speak = hookedSpeak
-            global origSpeechWithoutPausesInstance
-            origSpeechWithoutPausesInstance = speech.sayAll.SayAllHandler.speechWithoutPausesInstance
-            speech.sayAll.SayAllHandler.speechWithoutPausesInstance = speech.speechWithoutPauses.SpeechWithoutPauses(
-                speakFunc=hookedSpeak)
-            global isHooking
-            isHooking = True
-        except BaseException as E:
-            pass  # Evil!
+        self.setHook()
+
+    def setHook(self):
+        global origSpeak, UMLInstance
+        origSpeak = speech.speech.speak
+        UMLInstance = self
+        speech.speech.speak = hookedSpeak
+        global isHooking
+        isHooking = True
+        w = SayAllWatcher()
+        w.setDaemon(True)
+        w.start()
 
     def terminate(self):
         global isHooking
