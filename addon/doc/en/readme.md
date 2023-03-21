@@ -61,6 +61,10 @@ For email support, please send an email to "support@actlab.org".
 
 ## Changelog
 
+### 2023/03/21 Version 1.0.2
+
+1. Support NVDA 2023.1.
+
 ### 2022/10/20 Version 1.0.1
 
 1. Fixed an issue where UML initialization was failing When UML was loaded on NVDA startup. This issue was causing side effects such as say all command failure or synth freezing followed by an infinite loop. 
