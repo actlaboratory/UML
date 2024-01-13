@@ -35,7 +35,7 @@ jobs:
 
       - name: Test
         run: |
-          echo skiped tests
+          echo no tests
 
       - name: Set tag name if This is an official release
         run: echo "TAG_NAME=$($env:GITHUB_REF.Replace('refs/tags/', ''))" >> $env:GITHUB_ENV
