@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #app build tool
 #Copyright (C) 2019 Yukio Nozawa <personal@nyanchangames.com>
-#Copyright (C) 2019-2020 guredora <contact@guredora.com>
+#Copyright (C) 2019-2024 guredora <contact@guredora.com>
 #Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 #Copyright (C) 2021 Hiroki Fujii <hfujii@hisystron.com>
 
@@ -25,20 +25,17 @@ from tools import bumpup
 
 class build:
 	def __init__(self):
-		# appVeyorかどうかを判別し、処理をスタート
-		appveyor = self.setAppVeyor()
-		print("Starting build for %s (appveyor mode=%s)" % (buildVars.ADDON_KEYWORD, appveyor,))
+		# Github actionsなどの自動実行かどうかを判別し、処理をスタート
+		automated = self.setAutomated()
+		print("Starting build for %s(automated mode=%s)" % (buildVars.ADDON_KEYWORD, automated,))
 
 		# パッケージのパスとファイル名を決定
 		package_path = "output\\"
-		if 'APPVEYOR_REPO_TAG_NAME' in os.environ:
-			build_filename = os.environ['APPVEYOR_REPO_TAG_NAME']
-			# タグ名とバージョンが違ったらエラー
-			if build_filename != buildVars.ADDON_VERSION:
-				print("Unexpected tag name. expecting %s." %(buildVars.ADDON_VERSION,))
-				exit(-1)
-		else:
-			build_filename = 'snapshot'
+		build_filename = os.environ.get('TAG_NAME', 'snapshot')
+		# snapshotではなかった場合は、タグ名とバージョンが違ったらエラー
+		if (build_filename != "snapshot") and (build_filename != buildVars.ADDON_VERSION):
+			print("Unexpected tag name. expecting %s." %(buildVars.ADDON_VERSION,))
+			exit(-1)
 		print("Will be built as %s" % build_filename)
 
 		# addonフォルダの存在を確認
@@ -49,21 +46,16 @@ class build:
 		# 前のビルドをクリーンアップ
 		self.clean(package_path)
 
-		# appveyorでのスナップショットの場合はバージョン番号を一時的に書き換え
-		# バージョン番号をセット
-		if build_filename == "snapshot" and appveyor:
-			self.version_number = self.makeSnapshotVersionNumber()
-		elif build_filename == "snapshot":
-			self.version_number = buildVars.ADDON_VERSION
-		else:
-			self.version_number = build_filename
+		# 自動実行でのスナップショットの場合はバージョン番号を一時的に書き換え
+		if build_filename == "snapshot" and automated:
+			print(self.makeSnapshotVersionNumber())
 
 		# ビルド
 		self.build(package_path, build_filename)
 		archive_name = "%s-%s.zip" % (buildVars.ADDON_KEYWORD, build_filename,)
-		addon_filename = "%s-%s.nvda-addon" % (buildVars.ADDON_NAME, self.version_number)
+		addon_filename = "%s-%s.nvda-addon" % (buildVars.ADDON_NAME, buildVars.ADDON_VERSION,)
 		shutil.copyfile(package_path + addon_filename, addon_filename)
-		self.makePackageInfo(archive_name, addon_filename, self.version_number, build_filename)
+		self.makePackageInfo(archive_name, addon_filename, build_filename)
 		print("Build finished!")
 
 	def runcmd(self,cmd):
@@ -71,10 +63,8 @@ class build:
 		proc.communicate()
 		return proc.poll()
 
-	def setAppVeyor(self):
-		if len(sys.argv)>=2 and sys.argv[1]=="--appveyor":
-			return True
-		return False
+	def setAutomated(self):
+		return os.environ.get("GITHUB_ACTIONS", "false") == "true"
 
 	def clean(self,package_path):
 		if os.path.isdir(package_path):
@@ -84,14 +74,14 @@ class build:
 	def makeSnapshotVersionNumber(self):
 		#日本標準時オブジェクト
 		JST = datetime.timezone(datetime.timedelta(hours=+9))
-		#Pythonは世界標準時のZに対応していないので文字列処理で乗り切り、それを日本標準時に変換
-		dt = datetime.datetime.fromisoformat(os.environ["APPVEYOR_REPO_COMMIT_TIMESTAMP"][0:19]+"+00:00").astimezone(JST)
-		major = str(dt.year)[2:4]+str(dt.month).zfill(2)
+		dt = datetime.datetime.fromisoformat(os.environ["COMMIT_TIMESTAMP"]).astimezone(JST)
+		major = f"{dt.year % 100:02d}{dt.month:02d}"
 		minor = str(dt.day)
 		patch = str(int(math.floor((dt.hour*3600+dt.minute*60+dt.second)/86400*1000)))
+		buildVars.ADDON_VERSION = major+"."+minor+"."+patch
+		buildVars.ADDON_RELEASE_DATE = str(dt.date())
 		bumpup.bumpup(major+"."+minor+"."+patch, str(dt.date()))
 		return major+"."+minor+"."+patch
-
 
 	def build(self, package_path, build_filename):
 		print("Building...")
@@ -103,22 +93,11 @@ class build:
 		print("build finished with status %d" % ret)
 		if ret != 0:
 			sys.exit(ret)
-
-
 		print("Compressing into package...")
 		shutil.make_archive("%s-%s" % (buildVars.ADDON_KEYWORD, build_filename,),'zip',package_path)
 
-	def makePackageInfo(self, archive_name, addon_filename, addon_version, build_filename):
-		if "APPVEYOR_REPO_COMMIT_TIMESTAMP" in os.environ:
-			#日本標準時オブジェクト
-			JST = datetime.timezone(datetime.timedelta(hours=+9))
-			#Pythonは世界標準時のZに対応していないので文字列処理で乗り切り、それを日本標準時に変換
-			dt = datetime.datetime.fromisoformat(os.environ["APPVEYOR_REPO_COMMIT_TIMESTAMP"][0:19]+"+00:00").astimezone(JST)
-			dateStr = "%s-%s-%s" % (str(dt.year), str(dt.month).zfill(2), str(dt.day).zfill(2))
-		else:
-			dateStr = "this is a local build."
-		
-		print("computing hash...")
+	def makePackageInfo(self, archive_name, addon_filename, build_filename):
+		print("Calculating  hash...")
 		with open(archive_name, mode = "rb") as f:
 			content = f.read()
 		package_hash = hashlib.sha1(content).hexdigest()
@@ -130,9 +109,9 @@ class build:
 		info["package_hash"] = package_hash
 		info["patch_filename"] = addon_filename
 		info["patch_hash"] = addon_hash
-		info["version"] = addon_version
-		info["released_date"] = dateStr
-		with open("%s-%s_info.json" % (buildVars.ADDON_KEYWORD, build_filename), mode = "w") as f:
+		info["version"] = buildVars.ADDON_VERSION
+		info["released_date"] = buildVars.ADDON_RELEASE_DATE
+		with open("%s-%s_info.json" % (buildVars.ADDON_KEYWORD, build_filename,), mode = "w") as f:
 			json.dump(info, f)
 
 
