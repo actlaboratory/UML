@@ -60,6 +60,10 @@ GitHubのアカウントを持っている方は、 [Universal Multilingualのis
 
 ## 更新履歴
 
+### 2024/01/13 Version 1.0.3
+
+1. NVDA 2024.1 に対応しました。
+
 ### 2022/10/20 Version 1.0.2
 
 1. NVDA 2023.1 をサポートします。

@@ -1,4 +1,3 @@
-# reuse of this source code is prohibited.
 from __future__ import unicode_literals
 import addonHandler
 import globalVars
@@ -45,7 +44,11 @@ class AutoUpdateChecker:
         if not updatable:
             log.warning("Update check not supported.")
 
-    def autoUpdateCheck(self, mode=0):
+    def autoUpdateCheck(self, mode=AUTO):
+        """
+        Call this method to check for updates. mode=AUTO means automatic update check, and MANUAL means manual triggering like "check for updates" menu invocation.
+        When set to AUTO mode, some dialogs are not displayed (latest and error).
+        """
         if not updatable:
             return
         self.updater = NVDAAddOnUpdater(mode)
@@ -60,8 +63,9 @@ class NVDAAddOnUpdater ():
             t.start()
 
     def check_update(self):
+        """Called as the thread entry point."""
         post_params = {
-            "name": "UML",
+            "name": addonName,
             "version": addonVersion,
             "updater_version": "1.0.0",
         }
@@ -210,8 +214,6 @@ class UpdateDownloader(updateCheck.UpdateDownloader):
 
     def _downloadSuccess(self):
         self._stopped()
-        from gui import addonGui
-        closeAfter = addonGui.AddonsDialog._instance is None or (versionInfo.version_year, versionInfo.version_major) >= (2019, 1)
         try:
             try:
                 bundle = addonHandler.AddonBundle(self.destPath.decode("mbcs"))
@@ -235,8 +237,6 @@ class UpdateDownloader(updateCheck.UpdateDownloader):
                 gui.ExecAndPump(addonHandler.installAddonBundle, bundle)
             except BaseException:
                 log.error("Error installing  addon bundle from %s" % self.destPath, exc_info=True)
-                if not closeAfter:
-                    addonGui.AddonsDialog(gui.mainFrame).refreshAddonsList()
                 progressDialog.done()
                 del progressDialog
                 gui.messageBox(_("Failed to update add-on  from %s.") % self.destPath,
@@ -244,14 +244,12 @@ class UpdateDownloader(updateCheck.UpdateDownloader):
                                wx.OK | wx.ICON_ERROR)
                 return
             else:
-                if not closeAfter:
-                    addonGui.AddonsDialog(gui.mainFrame).refreshAddonsList(activeIndex=-1)
                 progressDialog.done()
                 del progressDialog
         finally:
             self.cleanup_tempfile()
-            if closeAfter:
-                wx.CallLater(1, addonGui.AddonsDialog(gui.mainFrame).Close)
+            from gui import addonGui
+            addonGui.promptUserForRestart()
 
     def cleanup_tempfile(self):
         if not os.path.isfile(self.destPath):
