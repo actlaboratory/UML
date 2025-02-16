@@ -1,4 +1,5 @@
 name = {addon_name}
+keyword = {addon_keyword}
 summary = "{addon_summary}"
 description = """{addon_description}"""
 author = "{addon_author}"
