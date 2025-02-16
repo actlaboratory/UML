@@ -33,6 +33,22 @@ except RuntimeError:
 AUTO=0
 MANUAL=1
 
+def isCompatibleWith2025():
+    return versionInfo.version_year >= 2025
+
+def messageBox(message, title):
+    if isCompatibleWith2025():
+        gui.message.MessageDialog.alert(message, title)
+    else:
+        gui.messageBox(message, title, style=wx.CENTER)
+
+def confirm(message, title):
+    if isCompatibleWith2025():
+        return gui.message.MessageDialog.confirm(message, title) == gui.message.ReturnCode.OK
+    else:
+        return gui.messageBox(message, title, style=wx.CENTER | wx.OK | wx.CANCEL | wx.ICON_INFORMATION) == wx.ID_OK
+
+
 class AutoUpdateChecker:
     def __init__(self):
         self.updater = None
@@ -69,13 +85,12 @@ class NVDAAddOnUpdater ():
             f = urlopen(req)
         except BaseException:
             if self.mode == MANUAL:
-                gui.messageBox(strs.ERROR_UNABLE_TO_CONNECT,
-                               strs.ERROR, style=wx.CENTER | wx.ICON_WARNING)
+                messageBox(strs.ERROR_UNABLE_TO_CONNECT, strs.ERROR)
             return False
 
         if f.getcode() != 200:
             if self.mode == MANUAL:
-                gui.messageBox(strs.ERROR_UNABLE_TO_CONNECT_SERVERSIDE, strs.ERROR, style=wx.CENTER | wx.ICON_WARNING)
+                messageBox(strs.ERROR_UNABLE_TO_CONNECT_SERVERSIDE, strs.ERROR)
             return False
 
         try:
@@ -84,31 +99,25 @@ class NVDAAddOnUpdater ():
             update_dict = json.loads(update_dict)
         except BaseException:
             if self.mode == MANUAL:
-                gui.messageBox(
-                    strs.ERROR_UPDATE_INFO_INVALID,
-                    strs.ERROR,
-                    style=wx.CENTER | wx.ICON_WARNING)
+                gui.messageBox(strs.ERROR_UPDATE_INFO_INVALID, strs.ERROR)
             return False
 
         code = update_dict["code"]
         if code == UPDATER_LATEST:
             if self.mode == MANUAL:
-                gui.messageBox(strs.NO_UPDATES, strs.UPDATE_CHECK_TITLE, style=wx.CENTER | wx.ICON_INFORMATION)
+                messageBox(strs.NO_UPDATES, strs.UPDATE_CHECK_TITLE)
             return False
         elif code == UPDATER_BAD_PARAM:
             if self.mode == MANUAL:
-                gui.messageBox(strs.ERROR_REQUEST_PARAMETERS_INVALID,
-                               strs.UPDATE_CHECK_TITLE, style=wx.CENTER | wx.ICON_INFORMATION)
+                messageBox(strs.ERROR_REQUEST_PARAMETERS_INVALID, strs.UPDATE_CHECK_TITLE)
             return False
         elif code == UPDATER_NOT_FOUND:
             if self.mode == MANUAL:
-                gui.messageBox(strs.UPDATER_NOT_REGISTERED,
-                               strs.UPDATE_CHECK_TITLE, style=wx.CENTER | wx.ICON_INFORMATION)
+                messageBox(strs.UPDATER_NOT_REGISTERED, strs.UPDATE_CHECK_TITLE)
             return False
         elif code == UPDATER_VISIT_SITE:
             if self.mode == MANUAL:
-                gui.messageBox(strs.UPDATE_NOT_POSSIBLE,
-                               strs.UPDATE_CHECK_TITLE, style=wx.CENTER | wx.ICON_INFORMATION)
+                messageBox(strs.UPDATE_NOT_POSSIBLE, strs.UPDATE_CHECK_TITLE)
             return False
 
         new_version = update_dict["update_version"]
@@ -122,8 +131,8 @@ class NVDAAddOnUpdater ():
         caption = strs.UPDATE_CONFIRMATION_TITLE
         question = strs.UPDATE_CONFIRMATION_MESSAGE.format(
             summary=addonSummary, newVersion=new_version, currentVersion=addonVersion)
-        answer = gui.messageBox(question, caption, style=wx.CENTER | wx.OK | wx.CANCEL | wx.CANCEL_DEFAULT | wx.ICON_INFORMATION)
-        if answer == wx.OK:
+        answer = confirm(question, caption)
+        if answer == True:
             downloader = UpdateDownloader(addonName, [url], hash)
             wx.CallAfter(downloader.start)
             return
@@ -158,10 +167,7 @@ class UpdateDownloader(updateCheck.UpdateDownloader):
     def _error(self):
         self._stopped()
         self.cleanup_tempfile()
-        gui.messageBox(
-            strs.ERROR_DOWNLOADING,
-            strs.ERROR,
-            wx.OK | wx.ICON_ERROR)
+        messageBox(strs.ERROR_DOWNLOADING, strs.ERROR)
 
     def _download(self, url):
         headers = {}
@@ -216,9 +222,7 @@ class UpdateDownloader(updateCheck.UpdateDownloader):
                 bundle = addonHandler.AddonBundle(self.destPath)
             except BaseException:
                 log.error("Error opening addon bundle from %s" % self.destPath, exc_info=True)
-                gui.messageBox(strs.ERROR_OPENING % self.destPath,
-                               strs.ERROR,
-                               wx.OK | wx.ICON_ERROR)
+                messageBox(strs.ERROR_OPENING % self.destPath, strs.ERROR)
                 return
             bundleName = bundle.manifest['name']
             for addon in addonHandler.getAvailableAddons():
@@ -234,9 +238,7 @@ class UpdateDownloader(updateCheck.UpdateDownloader):
                 log.error("Error installing  addon bundle from %s" % self.destPath, exc_info=True)
                 progressDialog.done()
                 del progressDialog
-                gui.messageBox(strs.ERROR_FAILED_TO_UPDATE % self.destPath,
-                               strs.ERROR,
-                               wx.OK | wx.ICON_ERROR)
+                messageBox(strs.ERROR_FAILED_TO_UPDATE % self.destPath, strs.ERROR)
                 return
             else:
                 progressDialog.done()
