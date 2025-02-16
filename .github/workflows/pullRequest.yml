@@ -24,6 +24,9 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
 
+      - name: download gettext tools
+        run: python tools\download_gettext.py
+
       - name: run scons
         run: scons
 
