@@ -17,7 +17,7 @@ from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 from .constants import *
 from .translate import *
-from . import updaterStringsEn as strs
+from . import updaterStrings as strs
 
 try:
     import updateCheck
