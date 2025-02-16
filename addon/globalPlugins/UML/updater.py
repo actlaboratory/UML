@@ -33,11 +33,20 @@ except RuntimeError:
 AUTO=0
 MANUAL=1
 
-def messageBox(message, title):
-    gui.message.MessageDialog.alert(message, title)
+def isCompatibleWith2025():
+    return versionInfo.version_year >= 2025
+
+def messageBox(message, title, style=None):
+    if isCompatibleWith2025():
+        gui.message.MessageDialog.alert(message, title)
+    else:
+        gui.messageBox(message, title, style=wx.CENTER)
 
 def confirm(message, title):
-    return gui.message.MessageDialog.confirm(message, title) == gui.message.ReturnCode.OK
+    if isCompatibleWith2025():
+        return gui.message.MessageDialog.confirm(message, title) == gui.message.ReturnCode.OK
+    else:
+        return gui.messageBox(message, title, style=wx.CENTER | wx.OK | wx.CANCEL | wx.ICON_INFORMATION) == wx.ID_OK
 
 
 class AutoUpdateChecker:
