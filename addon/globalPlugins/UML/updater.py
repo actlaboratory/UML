@@ -17,7 +17,7 @@ from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 from .constants import *
 from .translate import *
-from . import updatorStringsEn as strs
+from . import updaterStringsEn as strs
 
 try:
     import updateCheck
@@ -102,7 +102,7 @@ class NVDAAddOnUpdater ():
             return False
         elif code == UPDATER_NOT_FOUND:
             if self.mode == MANUAL:
-                gui.messageBox(strs.UPDATOR_NOT_REGISTERED,
+                gui.messageBox(strs.UPDATER_NOT_REGISTERED,
                                strs.UPDATE_CHECK_TITLE, style=wx.CENTER | wx.ICON_INFORMATION)
             return False
         elif code == UPDATER_VISIT_SITE:
