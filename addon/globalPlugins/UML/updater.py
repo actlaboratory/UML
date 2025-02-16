@@ -65,7 +65,7 @@ class NVDAAddOnUpdater ():
     def check_update(self):
         """Called as the thread entry point."""
         post_params = {
-            "name": addonName,
+            "name": addonKeyword,
             "version": addonVersion,
             "updater_version": "1.0.0",
         }
