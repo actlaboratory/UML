@@ -46,7 +46,7 @@ def confirm(message, title):
     if isCompatibleWith2025():
         return gui.message.MessageDialog.confirm(message, title) == gui.message.ReturnCode.OK
     else:
-        return gui.messageBox(message, title, style=wx.CENTER | wx.OK | wx.CANCEL | wx.ICON_INFORMATION) == wx.ID_OK
+        return gui.messageBox(message, title, style=wx.CENTER | wx.OK | wx.CANCEL | wx.ICON_INFORMATION) == wx.OK
 
 
 class AutoUpdateChecker:
@@ -99,7 +99,7 @@ class NVDAAddOnUpdater ():
             update_dict = json.loads(update_dict)
         except BaseException:
             if self.mode == MANUAL:
-                gui.messageBox(strs.ERROR_UPDATE_INFO_INVALID, strs.ERROR)
+                messageBox(strs.ERROR_UPDATE_INFO_INVALID, strs.ERROR)
             return False
 
         code = update_dict["code"]
