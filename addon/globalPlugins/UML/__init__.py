@@ -9,6 +9,7 @@ import config
 import synthDriverHandler
 from logHandler import log
 from .constants import *
+from .compat import messageBox
 from .settings import SettingsDialog
 from . import updater
 
@@ -104,9 +105,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             self._askHotReload(backup)
 
     def _askHotReload(self, backup):
-        ret = gui.messageBox(_("You are currently using Universal Multilingual.\nDo you want to reload Universal Multilingual and apply the new settings now?"), caption=_(
-            "Confirmation"), style=wx.YES_NO)
-        if ret == wx.ID_NO:
+        ret = yesno(_("You are currently using Universal Multilingual.\nDo you want to reload Universal Multilingual and apply the new settings now?"), _("Confirmation"))
+        if ret is False:
             return
 
         synthDriverHandler.setSynth(None)
@@ -119,7 +119,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             for elem in backup:
                 config.conf["UML_global"][elem[0]] = elem[1]
             synthDriverHandler.setSynth("UML")
-            gui.messageBox(_("Failed to reload Universal multilingual.\nreason: %s\nThe new settings will not be applied.") % (
+            messageBox(_("Failed to reload Universal multilingual.\nreason: %s\nThe new settings will not be applied.") % (
                 e), _("Error"))
             return
         # end exception
@@ -134,7 +134,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         msg = _("Updates will be checked automatically when launching NVDA.") if changed is True else _(
             "Updates will not be checked when launching NVDA.")
         self.updateCheckToggleItem.SetItemLabel(self.updateCheckToggleString())
-        gui.messageBox(msg, _("Settings changed"))
+        messageBox(msg, _("Settings changed"))
 
     def performUpdateCheck(self, evt):
         updater.AutoUpdateChecker().autoUpdateCheck(mode=updater.MANUAL)
