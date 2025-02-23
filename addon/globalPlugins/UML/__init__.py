@@ -9,7 +9,7 @@ import config
 import synthDriverHandler
 from logHandler import log
 from .constants import *
-from .compat import messageBox
+from .compat import messageBox, yesno
 from .settings import SettingsDialog
 from . import updater
 
