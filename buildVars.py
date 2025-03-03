@@ -13,8 +13,8 @@ def _(arg):
     return arg
 
 
-ADDON_VERSION = "1.0.3"
-ADDON_RELEASE_DATE = "2024-01-13"
+ADDON_VERSION = "1.0.4"
+ADDON_RELEASE_DATE = "2025-03-03"
 ADDON_NAME = "UniversalMultilingual"
 ADDON_KEYWORD = "UML"
 
@@ -24,6 +24,8 @@ ADDON_KEYWORD = "UML"
 addon_info = {
     # add-on Name/identifier, internal for NVDA
     "addon_name": ADDON_NAME,
+    # actlab custom: keyword
+    "addon_keyword": ADDON_KEYWORD,
     # Add-on summary, usually the user visible name of the addon.
     # Translators: Summary for this add-on
     # to be shown on installation and add-on information found in Add-ons Manager.
@@ -42,7 +44,7 @@ addon_info = {
     # Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
     "addon_minimumNVDAVersion": "2021.1",
     # Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-    "addon_lastTestedNVDAVersion": "2024.1",
+    "addon_lastTestedNVDAVersion": "2025.1",
     # Add-on update channel (default is None, denoting stable releases,
     # and for development releases, use "dev".)
     # Do not change unless you know what you are doing!
