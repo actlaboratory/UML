@@ -14,7 +14,7 @@ def _(arg):
 
 
 ADDON_VERSION = "1.0.4"
-ADDON_RELEASE_DATE = "2024-01-13"
+ADDON_RELEASE_DATE = "2025-03-03"
 ADDON_NAME = "UniversalMultilingual"
 ADDON_KEYWORD = "UML"
 
