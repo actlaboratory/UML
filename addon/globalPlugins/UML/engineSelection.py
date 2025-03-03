@@ -1,7 +1,7 @@
 import wx
 import addonHandler
-import gui
 import synthDriverHandler
+from .compat import messageBox
 
 try:
     addonHandler.initTranslation()
@@ -54,7 +54,7 @@ class EngineSelectionDialog(wx.Dialog):
         data = self.GetData()
         for k, v in self.engineMap.items():
             if k != self.language["internal"] and data == v:
-                gui.messageBox(
+                messageBox(
                     _("You cannot use the same engine for multiple languages. Please select another engine."),
                     _("Error")
                 )
