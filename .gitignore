@@ -12,3 +12,4 @@ public/*.md
 output/
 UML-snapshot.zip
 UML-snapshot_info.json
+venv/
