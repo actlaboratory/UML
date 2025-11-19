@@ -61,6 +61,10 @@ For email support, please send an email to "support@actlab.org".
 
 ## Changelog
 
+### 2025/11/19 Version 1.0.5
+
+1. Fixed a bug where speech would freeze due to an NVDA internal code change.
+
 ### 2025/03/03 Version 1.0.4
 
 1. Supports NVDA 2025.1.

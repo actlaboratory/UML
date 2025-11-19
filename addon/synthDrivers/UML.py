@@ -114,6 +114,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
                 synth = synthDriverHandler._getSynthDriver(v)()
                 synth.initSettings()
                 self.synthInstanceMap[k] = synth
+                print("synth added as key %s" % k)
             except BaseException as e:
                 raise InitializationError(
                     "Failed to load %s (reason: %s)" % (v, e))
@@ -161,18 +162,22 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread.join()
 
     def speak(self, seq):
+        print("last_lang: %s, dictionary keys: %s" % (self.last_lang, list(self.synthInstanceMap.keys())))
         synth = self.synthInstanceMap[self.last_lang]
         textList = []
         for i, item in enumerate(seq):
             if isinstance(item, LangChangeCommand):
-                if item.lang == self.last_lang:
+                # monkeypatch: I don't know when it has changed, but apparently it receives "ja_JP" here, originally it was ja.
+                code = item.lang.split("_")[0]
+                if code == self.last_lang:
                     continue
                 if textList:
                     _execWhenDone(self.wait_speak, synth, textList[:])
                     textList = []
                 # end textList exists
-                self.last_lang = item.lang
-                if item.lang == 'en':
+                self.last_lang = code
+                print("last_lang: %s" % code)
+                if code == 'en':
                     synth = self.synthInstanceMap['en']
                 else:
                     synth = self.synthInstanceMap['ja']
