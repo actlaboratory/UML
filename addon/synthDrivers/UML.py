@@ -193,6 +193,20 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         _execWhenDone(self.notify_done)
 
     def wait_speak(self, synth, seq):
+        # If seq contains no text (e.g. only IndexCommands from a language switch
+        # boundary), skip the engine entirely and fire index notifications directly.
+        # Without this, two deadlocks can occur:
+        #   1. Some engines (OneCore, SAPI5) never fire synthDoneSpeaking for
+        #      text-less sequences, so done.wait() blocks forever.
+        #   2. HISS may run indexReached synchronously on the calling thread when
+        #      there is no text, which re-enters self.lock and deadlocks.
+        if not any(isinstance(item, str) for item in seq):
+            for item in seq:
+                if isinstance(item, IndexCommand):
+                    synthDriverHandler.synthIndexReached.notify(
+                        synth=self, index=item.index
+                    )
+            return
         with self.lock:
             self.done.clear()
             self.cur_synth = synth
