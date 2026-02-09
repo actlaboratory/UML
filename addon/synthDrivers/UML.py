@@ -3,6 +3,7 @@
 # Some code provided by the NVDA community
 
 import config
+from logHandler import log
 import synthDriverHandler
 from speech.commands import IndexCommand, LangChangeCommand
 import speech
@@ -17,6 +18,10 @@ confspec = {
     "japanese": "string(default=_)",
     "fallback": "string(default=_)",
     "checkForUpdatesOnStartup": "boolean(default=True)",
+    "volumeOffset_ja": "integer(default=0, min=-100, max=100)",
+    "volumeOffset_en": "integer(default=0, min=-100, max=100)",
+    "rateOffset_ja": "integer(default=0, min=-100, max=100)",
+    "rateOffset_en": "integer(default=0, min=-100, max=100)",
 }
 config.conf.spec["UML_global"] = confspec
 
@@ -83,7 +88,10 @@ class SayAllWatcher(threading.Thread):
 class SynthDriver(synthDriverHandler.SynthDriver):
     name = 'UML'
     description = 'Universal multilingual'
-    supportedSettings = ()
+    supportedSettings = (
+        synthDriverHandler.SynthDriver.VolumeSetting(),
+        synthDriverHandler.SynthDriver.RateSetting(),
+    )
     supportedCommands = {IndexCommand, }
     supportedNotifications = {
         synthDriverHandler.synthIndexReached, synthDriverHandler.synthDoneSpeaking
@@ -98,7 +106,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.strategy = "word"
         if "strategy" in config.conf["UML_global"]:
             self.strategy = config.conf["UML_global"]["strategy"]
-        self    .primary_lang = "ja"
+        self.primary_lang = "ja"
         if "primaryLanguage" in config.conf["UML_global"]:
             # For some reason, primaryLanguage might be inaccessible on NVDA startup. Still haven't figured out why. Maybe configSpec is not loaded yet?
             self.primary_lang = config.conf["UML_global"]["primaryLanguage"]
@@ -114,12 +122,13 @@ class SynthDriver(synthDriverHandler.SynthDriver):
                 synth = synthDriverHandler._getSynthDriver(v)()
                 synth.initSettings()
                 self.synthInstanceMap[k] = synth
-                print("synth added as key %s" % k)
             except BaseException as e:
                 raise InitializationError(
                     "Failed to load %s (reason: %s)" % (v, e))
             # end wrap errors on exception
         # end load synth for all languages
+        self._volume = 100
+        self._rate = 50
         self.cur_synth = None
         self.lock = threading.Lock()
         self.lastindex = None
@@ -162,7 +171,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self.thread.join()
 
     def speak(self, seq):
-        print("last_lang: %s, dictionary keys: %s" % (self.last_lang, list(self.synthInstanceMap.keys())))
         synth = self.synthInstanceMap[self.last_lang]
         textList = []
         for i, item in enumerate(seq):
@@ -176,7 +184,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
                     textList = []
                 # end textList exists
                 self.last_lang = code
-                print("last_lang: %s" % code)
                 if code == 'en':
                     synth = self.synthInstanceMap['en']
                 else:
@@ -210,14 +217,15 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         with self.lock:
             self.done.clear()
             self.cur_synth = synth
+            self._applySynthSettings(synth)
             synth.speak(seq)
         self.done.wait()
 
     def cancel(self):
         try:
             while True:
-                item = bgQueue .get_nowait()
-                bgQueue .task_done()
+                item = bgQueue.get_nowait()
+                bgQueue.task_done()
         except queue.Empty:
             pass
 
@@ -245,6 +253,54 @@ class SynthDriver(synthDriverHandler.SynthDriver):
     @property
     def language(self):
         return self.last_lang
+
+    def _get_volume(self):
+        return self._volume
+
+    def _set_volume(self, value):
+        self._volume = value
+        self._applySettings()
+
+    def _get_rate(self):
+        return self._rate
+
+    def _set_rate(self, value):
+        self._rate = value
+        self._applySettings()
+
+    @staticmethod
+    def _clampPercent(value):
+        return max(0, min(100, int(value)))
+
+    def _getOffset(self, kind, lang):
+        try:
+            return int(config.conf["UML_global"]["%sOffset_%s" % (kind, lang)])
+        except Exception:
+            return 0
+
+    def _applyLangSettings(self, lang, synth):
+        eff_rate = self._clampPercent(self._rate + self._getOffset("rate", lang))
+        eff_vol = self._clampPercent(self._volume + self._getOffset("volume", lang))
+        try:
+            synth.rate = eff_rate
+        except Exception:
+            pass
+        try:
+            synth.volume = eff_vol
+        except Exception:
+            pass
+
+    def _applySynthSettings(self, synth):
+        for lang, candidate in self.synthInstanceMap.items():
+            if candidate is synth:
+                self._applyLangSettings(lang, synth)
+                return
+
+    def _applySettings(self):
+        if not hasattr(self, "synthInstanceMap") or not self.synthInstanceMap:
+            return
+        for lang, synth in self.synthInstanceMap.items():
+            self._applyLangSettings(lang, synth)
 
 
 def stringsplit(s, last_lang, strategy):

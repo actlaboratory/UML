@@ -27,6 +27,10 @@ confspec = {
     "japanese": "string(default=_)",
     "fallback": "string(default=_)",
     "checkForUpdatesOnStartup": "boolean(default=True)",
+    "volumeOffset_ja": "integer(default=0, min=-100, max=100)",
+    "volumeOffset_en": "integer(default=0, min=-100, max=100)",
+    "rateOffset_ja": "integer(default=0, min=-100, max=100)",
+    "rateOffset_en": "integer(default=0, min=-100, max=100)",
 }
 config.conf.spec["UML_global"] = confspec
 
@@ -87,6 +91,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             "primary_language": config.conf["UML_global"]["primaryLanguage"],
             "strategy": config.conf["UML_global"]["strategy"],
             "engineMap": engineMap,
+            "volumeOffset_ja": config.conf["UML_global"]["volumeOffset_ja"],
+            "volumeOffset_en": config.conf["UML_global"]["volumeOffset_en"],
+            "rateOffset_ja": config.conf["UML_global"]["rateOffset_ja"],
+            "rateOffset_en": config.conf["UML_global"]["rateOffset_en"],
         }
         dlg = SettingsDialog(opts)
         ret = dlg.ShowModal()
@@ -101,6 +109,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         config.conf["UML_global"]["strategy"] = data["strategy"]
         config.conf["UML_global"]["japanese"] = data["engineMap"]["ja"]
         config.conf["UML_global"]["fallback"] = data["engineMap"]["en"]
+        config.conf["UML_global"]["volumeOffset_ja"] = data["volumeOffset_ja"]
+        config.conf["UML_global"]["volumeOffset_en"] = data["volumeOffset_en"]
+        config.conf["UML_global"]["rateOffset_ja"] = data["rateOffset_ja"]
+        config.conf["UML_global"]["rateOffset_en"] = data["rateOffset_en"]
+        synth = synthDriverHandler.getSynth()
+        if synth and synth.name == "UML":
+            synth._applySettings()
         if synthDriverHandler.getSynth().name == "UML":
             self._askHotReload(backup)
 
