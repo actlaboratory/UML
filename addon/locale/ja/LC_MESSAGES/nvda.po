@@ -170,6 +170,20 @@ msgstr "エンジン"
 msgid "Select engine"
 msgstr "エンジンを選択"
 
+#: addon\globalPlugins\UML\settings.py:80
+msgid "Voice adjustments"
+msgstr "音声調整"
+
+#: addon\globalPlugins\UML\settings.py:92
+#, python-format
+msgid "%s volume adjustment (%d to %d)"
+msgstr "%s 音量調整 (%d から %d)"
+
+#: addon\globalPlugins\UML\settings.py:104
+#, python-format
+msgid "%s rate adjustment (%d to %d)"
+msgstr "%s 速度調整 (%d から %d)"
+
 #: addon\globalPlugins\UML\settings.py:117
 msgid "Not set"
 msgstr "未設定"
