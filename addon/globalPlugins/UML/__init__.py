@@ -105,6 +105,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def _saveSettings(self, data):
         # If the new settings fail, revert to the previous one.
         backup = list(config.conf["UML_global"].items())
+        old_japanese = config.conf["UML_global"]["japanese"]
+        old_fallback = config.conf["UML_global"]["fallback"]
         config.conf["UML_global"]["primaryLanguage"] = data["primary_language"]
         config.conf["UML_global"]["strategy"] = data["strategy"]
         config.conf["UML_global"]["japanese"] = data["engineMap"]["ja"]
@@ -116,7 +118,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         synth = synthDriverHandler.getSynth()
         if synth and synth.name == "UML":
             synth._applySettings()
-        if synthDriverHandler.getSynth().name == "UML":
+        engine_changed = (
+            data["engineMap"]["ja"] != old_japanese
+            or data["engineMap"]["en"] != old_fallback
+        )
+        if engine_changed and synthDriverHandler.getSynth().name == "UML":
             self._askHotReload(backup)
 
     def _askHotReload(self, backup):
