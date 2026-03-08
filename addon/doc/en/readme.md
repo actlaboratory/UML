@@ -39,6 +39,18 @@ Set speech engines which will be used as Japanese and non-Japanese speeches, res
 
 Currently, it is not supported to use the same speech engine for different languages. For example, when you are using SAPI5 speech engine for non-Japanese, you cannot use SAPI5 for Japanese.
 
+### Volume / Rate adjustment options
+
+You can fine-tune the volume and rate for each language.
+
+The adjustment is specified in a range of plus or minus 100, relative to UML's own rate and volume settings.
+
+A value of 100 represents the amount of change when the slider is moved to its maximum on top of each speech engine's configured value. -100 represents the amount of change when the slider is moved to its minimum.
+
+For example, if UML's configured rate is 50, a language with a "rate adjustment" of 20 will be spoken at rate 70 by its corresponding speech engine. Conversely, a "rate adjustment" of -20 results in rate 30.
+
+Adjusted values are automatically clamped to the maximum / minimum supported by each speech engine.
+
 ## Recommended settings
 
 It is strongly recommended to check the "Trust voice's language when processing characters and symbols" checkbox, which is located under NVDA's speech settings. It is a bit hard to describe, but it results in better reading.
@@ -47,7 +59,7 @@ It is strongly recommended to check the "Trust voice's language when processing 
 
 Some combinations of speech engines will not work properly. In most cases, it is due to the synthDriver's incorrect implementations, and it is not fixable no matter how Universal Multilingual tries its best. 
 
-In order to change settings of each speech engine, you need to switch to the speech engine from NVDA's speech settings first, then modify to your preference there. Universal Multilingual is responsible only for switching speech engines, and does not support any features which hook into the behaviors of speech engines under its control.
+In order to change settings other than "rate" and "volume" for each speech engine, you need to switch to the speech engine from NVDA's speech settings first, then modify to your preference there.
 
 Some events like cap pitch changing have not been supported yet. The support is planned in a near future.
 
@@ -60,6 +72,14 @@ If you have a GitHub account, [Universal Multilingual's issues page](https://git
 For email support, please send an email to "support@actlab.org".
 
 ## Changelog
+
+### 2026/03/08 Version 1.1.0
+
+1. Fixed a bug where speech would freeze and not recover in certain situations. ( [#33](https://github.com/actlaboratory/UML/pull/33) , by [@mo29cg](https://github.com/mo29cg) )
+2. You can now fine-tune the rate and volume for each speech engine. These settings are accessible from both the UML settings dialog and the Settings Ring. ( [#34](https://github.com/actlaboratory/UML/pull/34) , by [@mo29cg](https://github.com/mo29cg) )
+3. UML now only prompts for reload when necessary after changing settings.
+4. As an internal change, the text processing method has been changed to use ExtensionPoints. This reduces the chance of breaking the behavior of other add-ons.
+5. Tested using NVDA 2026 alpha version and updated LastTestedNVDAVersion.
 
 ### 2025/11/19 Version 1.0.5
 

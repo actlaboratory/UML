@@ -75,7 +75,46 @@ class SettingsDialog(wx.Dialog):
         msz.Add(enginesLabel)
         msz.Add(self.enginesList, 0, wx.EXPAND)
         msz.Add(self.selectEngineButton, 1, wx.ALIGN_RIGHT)
-        msz.AddSpacer(40)
+        msz.AddSpacer(20)
+
+        adjLabel = wx.StaticText(self, wx.ID_ANY, label=_("Voice adjustments"))
+        msz.Add(adjLabel)
+        msz.AddSpacer(5)
+
+        offsetMin = -100
+        offsetMax = 100
+        self.volumeOffsets = {}
+        self.rateOffsets = {}
+        for lang in self.langValues:
+            code = lang["internal"]
+            name = lang["user"]
+
+            volName = _("%s volume adjustment (%d to %d)") % (
+                name, offsetMin, offsetMax)
+            volLabel = wx.StaticText(self, wx.ID_ANY, label=volName)
+            self.volumeOffsets[code] = wx.SpinCtrl(
+                self, wx.ID_ANY, min=offsetMin, max=offsetMax,
+                initial=opts.get("volumeOffset_%s" % code, 0),
+                name=volName)
+            vsz = wx.BoxSizer(wx.HORIZONTAL)
+            vsz.Add(volLabel, 1)
+            vsz.Add(self.volumeOffsets[code], 1)
+            msz.Add(vsz, 0, wx.EXPAND)
+
+            rateName = _("%s rate adjustment (%d to %d)") % (
+                name, offsetMin, offsetMax)
+            rateLabel = wx.StaticText(self, wx.ID_ANY, label=rateName)
+            self.rateOffsets[code] = wx.SpinCtrl(
+                self, wx.ID_ANY, min=offsetMin, max=offsetMax,
+                initial=opts.get("rateOffset_%s" % code, 0),
+                name=rateName)
+            rsz = wx.BoxSizer(wx.HORIZONTAL)
+            rsz.Add(rateLabel, 1)
+            rsz.Add(self.rateOffsets[code], 1)
+            msz.Add(rsz, 0, wx.EXPAND)
+            msz.AddSpacer(5)
+
+        msz.AddSpacer(20)
 
         ok = wx.Button(self, wx.ID_OK, _("OK"))
         ok.SetDefault()
@@ -126,11 +165,16 @@ class SettingsDialog(wx.Dialog):
         return ""
 
     def GetData(self):
-        return {
+        data = {
             "primary_language": self.langValues[self.langList.GetSelection()]["internal"],
             "strategy": self.strategyValues[self.strategyList.GetSelection()]["internal"],
             "engineMap": self.engineMap,
         }
+        for lang in self.langValues:
+            code = lang["internal"]
+            data["volumeOffset_%s" % code] = self.volumeOffsets[code].GetValue()
+            data["rateOffset_%s" % code] = self.rateOffsets[code].GetValue()
+        return data
 
     def onSynthSelect(self, evt):
         selected = self.enginesList.GetFocusedItem()

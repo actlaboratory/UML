@@ -27,6 +27,10 @@ confspec = {
     "japanese": "string(default=_)",
     "fallback": "string(default=_)",
     "checkForUpdatesOnStartup": "boolean(default=True)",
+    "volumeOffset_ja": "integer(default=0, min=-100, max=100)",
+    "volumeOffset_en": "integer(default=0, min=-100, max=100)",
+    "rateOffset_ja": "integer(default=0, min=-100, max=100)",
+    "rateOffset_en": "integer(default=0, min=-100, max=100)",
 }
 config.conf.spec["UML_global"] = confspec
 
@@ -87,6 +91,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             "primary_language": config.conf["UML_global"]["primaryLanguage"],
             "strategy": config.conf["UML_global"]["strategy"],
             "engineMap": engineMap,
+            "volumeOffset_ja": config.conf["UML_global"]["volumeOffset_ja"],
+            "volumeOffset_en": config.conf["UML_global"]["volumeOffset_en"],
+            "rateOffset_ja": config.conf["UML_global"]["rateOffset_ja"],
+            "rateOffset_en": config.conf["UML_global"]["rateOffset_en"],
         }
         dlg = SettingsDialog(opts)
         ret = dlg.ShowModal()
@@ -97,11 +105,24 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def _saveSettings(self, data):
         # If the new settings fail, revert to the previous one.
         backup = list(config.conf["UML_global"].items())
+        old_japanese = config.conf["UML_global"]["japanese"]
+        old_fallback = config.conf["UML_global"]["fallback"]
         config.conf["UML_global"]["primaryLanguage"] = data["primary_language"]
         config.conf["UML_global"]["strategy"] = data["strategy"]
         config.conf["UML_global"]["japanese"] = data["engineMap"]["ja"]
         config.conf["UML_global"]["fallback"] = data["engineMap"]["en"]
-        if synthDriverHandler.getSynth().name == "UML":
+        config.conf["UML_global"]["volumeOffset_ja"] = data["volumeOffset_ja"]
+        config.conf["UML_global"]["volumeOffset_en"] = data["volumeOffset_en"]
+        config.conf["UML_global"]["rateOffset_ja"] = data["rateOffset_ja"]
+        config.conf["UML_global"]["rateOffset_en"] = data["rateOffset_en"]
+        synth = synthDriverHandler.getSynth()
+        if synth and synth.name == "UML":
+            synth._applySettings()
+        engine_changed = (
+            data["engineMap"]["ja"] != old_japanese
+            or data["engineMap"]["en"] != old_fallback
+        )
+        if engine_changed and synthDriverHandler.getSynth().name == "UML":
             self._askHotReload(backup)
 
     def _askHotReload(self, backup):
