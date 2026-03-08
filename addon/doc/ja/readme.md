@@ -78,6 +78,7 @@ GitHubのアカウントを持っている方は、 [Universal Multilingualのis
 2. 音声エンジンごとに、速度と音量を微調整できるようになりました。これらの設定は、 UML の設定ダイアログのほか、簡単音声設定からもアクセス可能です ( [#34](https://github.com/actlaboratory/UML/pull/34) , by (@mo29cg)[https://github.com/mo29cg])
 3. UML の設定を変更したとき、必要な場合だけ UML の再読み込みを問い合わせるようにしました。
 4. 内部処理の変更として、テキストの処理方法を ExtensionPoints ベースに変更しました。これにより、他のアドオンの動作を壊す可能性が減りました。
+5. NVDA 2026 アルファ版での動作を確認し、 LastTestedNVDAVersion を更新しました。
 
 ### 2025/11/19 Version 1.0.5
 1. NVDAの内部コードが変更されていたことに伴い、読み上げがフリーズしていた不具合を修正しました。

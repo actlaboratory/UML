@@ -79,6 +79,7 @@ For email support, please send an email to "support@actlab.org".
 2. You can now fine-tune the rate and volume for each speech engine. These settings are accessible from both the UML settings dialog and the Settings Ring. ( [#34](https://github.com/actlaboratory/UML/pull/34) , by [@mo29cg](https://github.com/mo29cg) )
 3. UML now only prompts for reload when necessary after changing settings.
 4. As an internal change, the text processing method has been changed to use ExtensionPoints. This reduces the chance of breaking the behavior of other add-ons.
+5. Tested using NVDA 2026 alpha version and updated LastTestedNVDAVersion.
 
 ### 2025/11/19 Version 1.0.5
 
