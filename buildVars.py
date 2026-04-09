@@ -13,8 +13,8 @@ def _(arg):
     return arg
 
 
-ADDON_VERSION = "1.1.0"
-ADDON_RELEASE_DATE = "2026-03-08"
+ADDON_VERSION = "1.1.1"
+ADDON_RELEASE_DATE = "2026-04-10"
 ADDON_NAME = "UniversalMultilingual"
 ADDON_KEYWORD = "UML"
 
