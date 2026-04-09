@@ -72,6 +72,10 @@ GitHubのアカウントを持っている方は、 [Universal Multilingualのis
 
 ## 更新履歴
 
+### 2026/04/10 Version 1.1.1
+
+1. NVDA 2026.1 以降のバージョンにおける互換性の不具合を修正しました。
+
 ### 2026/03/08 Version 1.1.0
 
 1. 一部の状況に置いて、読み上げがフリーズして戻ってこなくなる不具合を修正しました ( [#33](https://github.com/actlaboratory/UML/pull/33) , by (@mo29cg)[https://github.com/mo29cg])

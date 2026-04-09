@@ -73,6 +73,10 @@ For email support, please send an email to "support@actlab.org".
 
 ## Changelog
 
+### 2026/04/10 Version 1.1.1
+
+1. Fixed a compatibility issue with NVDA 2026.1 and later versions.
+
 ### 2026/03/08 Version 1.1.0
 
 1. Fixed a bug where speech would freeze and not recover in certain situations. ( [#33](https://github.com/actlaboratory/UML/pull/33) , by [@mo29cg](https://github.com/mo29cg) )
