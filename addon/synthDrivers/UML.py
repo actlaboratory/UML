@@ -88,10 +88,15 @@ class SayAllWatcher(threading.Thread):
 class SynthDriver(synthDriverHandler.SynthDriver):
     name = 'UML'
     description = 'Universal multilingual'
-    supportedSettings = (
+    _supportedSettings = [
         synthDriverHandler.SynthDriver.VolumeSetting(),
         synthDriverHandler.SynthDriver.RateSetting(),
-    )
+    ]
+    if hasattr(synthDriverHandler.SynthDriver, "RateBoostSetting"):
+        _supportedSettings.append(
+            synthDriverHandler.SynthDriver.RateBoostSetting()
+        )
+    supportedSettings = tuple(_supportedSettings)
     supportedCommands = {IndexCommand, }
     supportedNotifications = {
         synthDriverHandler.synthIndexReached, synthDriverHandler.synthDoneSpeaking
@@ -129,6 +134,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         # end load synth for all languages
         self._volume = 100
         self._rate = 50
+        self._rateBoost = True
         self.cur_synth = None
         self.lock = threading.Lock()
         self.lastindex = None
@@ -268,6 +274,13 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         self._rate = value
         self._applySettings()
 
+    def _get_rateBoost(self):
+        return self._rateBoost
+
+    def _set_rateBoost(self, value):
+        self._rateBoost = bool(value)
+        self._applySettings()
+
     @staticmethod
     def _clampPercent(value):
         return max(0, min(100, int(value)))
@@ -278,6 +291,17 @@ class SynthDriver(synthDriverHandler.SynthDriver):
         except Exception:
             return 0
 
+    def _getRateBoostMode(self, synth):
+        try:
+            currentRateBoost = getattr(synth, "rateBoost")
+        except Exception:
+            currentRateBoost = None
+        if isinstance(currentRateBoost, bool):
+            return "boolean"
+        if isinstance(currentRateBoost, (int, float)):
+            return "numeric"
+        return None
+
     def _applyLangSettings(self, lang, synth):
         eff_rate = self._clampPercent(self._rate + self._getOffset("rate", lang))
         eff_vol = self._clampPercent(self._volume + self._getOffset("volume", lang))
@@ -285,6 +309,18 @@ class SynthDriver(synthDriverHandler.SynthDriver):
             synth.rate = eff_rate
         except Exception:
             pass
+        rateBoostMode = self._getRateBoostMode(synth)
+        if rateBoostMode == "boolean":
+            try:
+                synth.rateBoost = self._rateBoost
+            except Exception:
+                pass
+        elif rateBoostMode == "numeric":
+            targetRateBoost = eff_rate if self._rateBoost else 0
+            try:
+                synth.rateBoost = targetRateBoost
+            except Exception:
+                pass
         try:
             synth.volume = eff_vol
         except Exception:
